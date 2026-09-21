@@ -1,0 +1,1318 @@
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#185FA5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="STEAM-Voc Edu">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-180.png">
+<title>STEAM-Voc Edu Publications</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--color-background-primary:#f7f9fc;--color-background-secondary:#edf3ff;--color-surface-soft:#eefaf8;--color-text-primary:#1f2a3d;--color-text-secondary:#5b6475;--color-text-tertiary:#7c879a;--color-border-tertiary:#dfe7f5;--color-primary:#1d4ed8;--color-primary-strong:#123ea7;--color-success:#1aa06d;--color-warning:#d58a00;--color-danger:#d94c64;--color-surface-elevated:#ffffff;--shadow-soft:0 14px 34px rgba(29,78,216,.08);--shadow-strong:0 24px 54px rgba(19,27,42,.12);--accent-glow:rgba(29,78,216,.08);--navy:#132a4f;--slate:#4a5871;--indigo:#3f4ef8;--teal:#00b9a3;--gold:#e5a636;--rose:#f16174;--soft-ice:#dfeeff}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#f5f8ff 0%,#eef6ff 18%,#f9fbff 100%);color:var(--color-text-primary);padding:0 20px 32px;transition:background .2s ease,color .2s ease}
+body.dark-mode{--color-background-primary:#111827;--color-background-secondary:#162235;--color-surface-soft:#142b44;--color-text-primary:#edf4ff;--color-text-secondary:#c7d7ef;--color-text-tertiary:#9aaec9;--color-border-tertiary:#2d3b57;--color-primary:#8ec5ff;--color-primary-strong:#bedfff;--color-surface-elevated:#18243b;--shadow-soft:0 16px 36px rgba(0,0,0,.32);--shadow-strong:0 24px 58px rgba(0,0,0,.44);--accent-glow:rgba(142,197,255,.12);background:linear-gradient(180deg,#0b1523 0%,#111b2d 40%,#111827 100%);color:var(--color-text-primary)}
+body.dark-mode .header,body.dark-mode .chart-card,body.dark-mode .table-section,body.dark-mode .metric,body.dark-mode .detail-panel{background:rgba(17,24,39,.96);border-color:rgba(142,197,255,.15)}
+body.dark-mode .filter-row input,body.dark-mode .filter-row select,body.dark-mode .multi-filter-btn,body.dark-mode .multi-filter-menu,body.dark-mode .form-group input,body.dark-mode .form-group select,body.dark-mode .form-group textarea,body.dark-mode .reset-btn,body.dark-mode .btn-cancel,body.dark-mode .pagination button,body.dark-mode .preview-block{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-tertiary)}
+body.dark-mode .btn-add{box-shadow:0 12px 22px rgba(142,197,255,.22)}
+.header{padding:1.6rem 1.5rem 1.3rem;border:1px solid rgba(17,39,90,.08);background:linear-gradient(135deg,rgba(255,255,255,.98) 0%,rgba(245,248,255,.99) 45%,rgba(240,247,255,.98) 100%);backdrop-filter:blur(14px);box-shadow:var(--shadow-soft);border-radius:28px;margin:16px auto 1.5rem;max-width:1500px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;overflow:hidden}
+.header::before{content:"";position:absolute;inset:0 auto 0 0;width:390px;background:linear-gradient(90deg,rgba(29,78,216,.12),rgba(0,185,163,.07),transparent 72%);pointer-events:none}
+.header::after{content:"";position:absolute;right:-40px;top:-30px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(29,78,216,.10), rgba(29,78,216,0) 68%);pointer-events:none}
+.header-left{max-width:980px;position:relative;z-index:1}
+.header-left h1{font-size:31px;line-height:1.15;font-weight:800;color:var(--color-text-primary);letter-spacing:-.04em}
+.header-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.meta-pill{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(29,78,216,.09),rgba(0,185,163,.08));color:var(--color-text-secondary);border:1px solid rgba(17,39,90,.08);font-size:11px;font-weight:700}
+.meta-pill.muted{background:linear-gradient(135deg,rgba(229,166,54,.14),rgba(241,97,116,.08));color:var(--color-primary-strong)}
+.header-actions{padding-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative;z-index:1}
+.btn-add,.btn-export,.btn-login,.theme-toggle,.btn-present{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:transform .15s ease, filter .15s ease, opacity .15s ease}
+.btn-add{background:linear-gradient(135deg,#1d4ed8,#2563eb 35%,#3f4ef8 100%);color:#fff;box-shadow:0 14px 24px rgba(29,78,216,.18)}
+.btn-export,.btn-login,.theme-toggle,.btn-present{background:linear-gradient(135deg,#ffffff,#f8fbff);border:1px solid rgba(17,39,90,.10);color:var(--color-text-primary);box-shadow:0 8px 16px rgba(15,23,42,.04)}
+.btn-add:hover,.btn-export:hover,.btn-login:hover,.theme-toggle:hover,.btn-present:hover{transform:translateY(-1px);filter:brightness(1.02)}
+.executive-summary{max-width:1500px;margin:0 auto 1.4rem;background:linear-gradient(135deg,rgba(19,42,79,.96),rgba(25,77,152,.94));border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:var(--shadow-soft);padding:1rem 1.1rem;position:relative;overflow:hidden}
+.executive-summary::before{content:"";position:absolute;inset:auto 0 0 auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,.14), transparent 70%);pointer-events:none}
+.summary-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:relative;z-index:1;margin-bottom:12px}
+.summary-title{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.summary-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:700}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;z-index:1}
+.summary-kpi{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px 16px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between}
+.summary-kpi:nth-child(1){background:linear-gradient(135deg,rgba(88,166,255,.18),rgba(255,255,255,.04));}
+.summary-kpi:nth-child(2){background:linear-gradient(135deg,rgba(28,185,147,.18),rgba(255,255,255,.04));}
+.summary-kpi:nth-child(3){background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(255,255,255,.04));}
+.summary-kpi:nth-child(4){background:linear-gradient(135deg,rgba(168,85,247,.18),rgba(255,255,255,.04));}
+.kpi-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.kpi-value{font-size:32px;font-weight:800;line-height:1;color:#fff;letter-spacing:-.05em}
+.kpi-meta{font-size:11px;color:rgba(255,255,255,.8)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 auto 1.5rem;max-width:1500px}
+.metric{background:linear-gradient(135deg,#ffffff 0%,#f9fbff 100%);border:1px solid rgba(17,39,90,.08);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow-soft);position:relative;overflow:hidden}
+.metric::before{content:"";position:absolute;inset:0 auto auto 0;height:100%;width:6px;background:linear-gradient(180deg,#00b9a3,#1d4ed8,#3f4ef8)}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:7px;font-weight:700}
+.metric-value{font-size:30px;font-weight:800;color:var(--color-text-primary);letter-spacing:-.04em}
+.metric-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:4px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 auto 1.5rem;max-width:1500px}
+.chart-card{background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(250,252,255,.94));border:1px solid rgba(17,39,90,.08);border-radius:20px;padding:1rem 1.25rem;box-shadow:var(--shadow-soft)}
+.chart-card h3{font-size:12px;font-weight:800;color:var(--color-text-secondary);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;font-size:11px;color:var(--color-text-secondary)}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.table-section{background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(248,250,255,.93));border:1px solid rgba(17,39,90,.08);border-radius:22px;padding:1rem 1.25rem;margin:0 auto 1.5rem;max-width:1500px;box-shadow:var(--shadow-soft)}
+.table-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.table-header h3{font-size:12px;font-weight:800;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.08em}
+.table-header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filter-row select,.filter-row input{font-size:13px;padding:8px 12px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.filter-row input{flex:1;min-width:180px}
+select#filterYear{border-color:#378ADD;color:#185FA5;font-weight:600}
+.multi-filter{position:relative;min-width:150px}
+.multi-filter-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:8px 10px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer;transition:border-color .15s ease,color .15s ease}
+.multi-filter-btn.active{border-color:#378ADD;color:#185FA5;font-weight:600;background:#edf5ff}
+.multi-filter-menu{display:none;position:absolute;z-index:20;top:calc(100% + 4px);left:0;min-width:180px;max-height:240px;overflow-y:auto;background:var(--color-background-primary);border:1px solid var(--color-border-tertiary);border-radius:12px;box-shadow:0 12px 26px rgba(0,0,0,.12);padding:6px}
+.multi-filter.open .multi-filter-menu{display:block}
+.multi-filter-option{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;font-size:12px;color:var(--color-text-primary);cursor:pointer;white-space:nowrap}
+.multi-filter-option:hover{background:var(--color-background-secondary)}
+.multi-filter-option input{width:13px;height:13px;flex:0 0 auto}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;color:var(--color-text-secondary);border-bottom:1px solid var(--color-border-tertiary);white-space:nowrap;background:rgba(245,248,252,.9)}
+td{padding:10px 12px;border-bottom:1px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--color-background-secondary)}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b-published{background:#EAF3DE;color:#3B6D11}
+.b-accepted{background:#E1F5EE;color:#0F6E56}
+.b-revision{background:#FAEEDA;color:#854F0B}
+.b-review{background:#E6F1FB;color:#185FA5}
+.b-submitted{background:#EEEDFE;color:#534AB7}
+.b-draft{background:#F1EFE8;color:#5F5E5A}
+.b-q1{background:#EEEDFE;color:#3C3489}
+.b-q2{background:#E6F1FB;color:#0C447C}
+.b-q3{background:#EAF3DE;color:#27500A}
+.b-q4{background:#FAEEDA;color:#633806}
+.b-nonq{background:#F1EFE8;color:#444441}
+.b-sinta{background:#FAECE7;color:#993C1D}
+.b-scopus{background:#E6F1FB;color:#185FA5}
+.b-nonscopus{background:#F1EFE8;color:#5F5E5A}
+.b-phd{background:#FBEAF0;color:#993556}
+.b-first{background:#EAF3DE;color:#3B6D11}
+.b-co{background:#F1EFE8;color:#5F5E5A}
+.view-only-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;background:var(--color-background-secondary);color:var(--color-text-tertiary);font-size:10px;border:1px solid var(--color-border-tertiary)}
+.title-link{display:inline-block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:none;padding:0;color:var(--color-text-primary);font:inherit;text-align:left;cursor:pointer}
+.title-link:hover{color:#185FA5;text-decoration:underline}
+.pub-link{display:inline-flex;margin-top:3px;font-size:11px;color:#185FA5;text-decoration:none}
+.pub-link:hover{text-decoration:underline}
+.act-btn{background:none;border:none;cursor:pointer;color:var(--color-text-secondary);padding:2px 5px;border-radius:4px;font-size:13px}
+.act-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.act-btn.del:hover{color:#A32D2D}
+.pagination{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;color:var(--color-text-secondary)}
+.pagination button{padding:4px 10px;font-size:12px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary);cursor:pointer}
+.pagination button:disabled{opacity:0.4;cursor:default}
+.count-info{font-size:12px;color:var(--color-text-secondary)}
+.reset-btn{font-size:12px;padding:6px 12px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer}
+.detail-panel{position:fixed;right:24px;top:24px;bottom:24px;width:min(420px, calc(100vw - 32px));background:rgba(255,255,255,.96);border:1px solid var(--color-border-tertiary);border-radius:24px;box-shadow:var(--shadow-strong);z-index:120;display:flex;flex-direction:column;overflow:hidden}
+.detail-header{padding:18px 20px 14px;border-bottom:1px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg, rgba(24,95,165,.04), rgba(255,255,255,0))}
+.detail-header h3{font-size:16px;font-weight:700}
+.detail-body{padding:18px 20px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.preview-block{padding:12px 14px;border:1px solid var(--color-border-tertiary);border-radius:12px;background:var(--color-background-secondary)}
+.preview-label{font-size:11px;font-weight:700;color:var(--color-text-secondary);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.preview-value{font-size:14px;color:var(--color-text-primary);line-height:1.5}
+.detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.detail-link{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:10px;background:var(--color-primary);color:#fff;text-decoration:none;font-size:12px;font-weight:600}
+.detail-close{padding:8px 12px;border:none;border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary);border:1px solid var(--color-border-tertiary);cursor:pointer}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:100}
+.modal{background:var(--color-background-primary);border-radius:18px;border:1px solid var(--color-border-tertiary);padding:1.4rem;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-strong)}
+.modal h2{font-size:18px;font-weight:700;color:var(--color-text-primary);margin-bottom:1.1rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:600;color:var(--color-text-secondary)}
+.form-group input,.form-group select,.form-group textarea{font-size:13px;padding:7px 10px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.form-group textarea{resize:vertical;min-height:60px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:1.25rem}
+.btn-cancel{padding:8px 16px;background:var(--color-background-secondary);border:1px solid var(--color-border-tertiary);border-radius:10px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.btn-save{padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-save:hover{background:#0C447C}
+.btn-delete{padding:8px 16px;background:#A32D2D;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;margin-right:auto}
+.btn-delete:hover{background:#7F2020}
+.filter-active-badge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px}
+.login-box{display:flex;flex-direction:column;gap:12px;padding:10px 0}
+.login-box p{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
+.login-divider{display:flex;align-items:center;gap:12px;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--color-border-tertiary)}
+.login-demo{display:flex;flex-direction:column;gap:8px}
+.login-demo input{padding:10px 12px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary)}
+.login-demo button{padding:10px 12px;border:none;border-radius:10px;background:var(--color-primary);color:#fff;font-weight:600;cursor:pointer}
+body.presentation-mode .chart-card,body.presentation-mode .table-section,body.presentation-mode .metric{transform:scale(1.01)}
+body.presentation-mode .filter-row{display:none}
+body.presentation-mode .header{margin-bottom:1rem}
+body.presentation-mode .table-section{border-width:1.5px;box-shadow:0 16px 32px rgba(24,95,165,.10)}
+body.presentation-mode .header::before{width:520px;background:radial-gradient(circle at left top, rgba(24,95,165,.18), transparent 60%)}
+body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--color-primary),#2b78c7);color:#fff;border-color:transparent}
+@media(max-width:720px){
+  body{padding:0 14px 20px}
+  .header{padding:1.2rem 1rem}
+  .header-left h1{font-size:22px}
+  .header-actions,.btn-add,.btn-export,.btn-login,.theme-toggle,.btn-present{width:100%}
+  .btn-add,.btn-export,.btn-login,.theme-toggle,.btn-present{justify-content:center}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .charts-row{grid-template-columns:1fr}
+  .filter-row{display:grid;grid-template-columns:1fr 1fr}
+  .filter-row input{grid-column:1/-1}
+  .multi-filter{min-width:unset}
+  .detail-panel{right:12px;left:12px;top:12px;bottom:12px;width:auto}
+}
+@media(max-width:480px){
+  .metrics{grid-template-columns:1fr}
+  .filter-row{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff;color:#000;}
+  .header-actions,.filter-row,.pagination,.modal-bg,.detail-panel,.btn-add,.btn-export,.btn-login,.theme-toggle,.btn-present{display:none !important;}
+  .chart-card,.table-section,.metric{box-shadow:none;border:1px solid #d0d0d0;}
+}
+</style>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Publication monitoring Andri</h1>
+    <div class="header-meta">
+      <span class="meta-pill muted">2026 tracking</span>
+      <span class="meta-pill">Google Sheet ready</span>
+      <span class="meta-pill" id="accessBadge">Viewer mode</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="theme-toggle" onclick="toggleDarkMode()" id="themeToggle"><i class="ti ti-moon"></i> Dark mode</button>
+    <button class="btn-present" onclick="togglePresentationMode()" id="presentationToggle"><i class="ti ti-presentation"></i> Presentation</button>
+    <button class="btn-export" onclick="exportCsv()"><i class="ti ti-file-export"></i> Export CSV</button>
+    <button class="btn-export" onclick="exportPdf()"><i class="ti ti-file-text"></i> Export PDF</button>
+    <button class="btn-login" id="loginBtn" onclick="openLoginModal()"><i class="ti ti-user-circle"></i> Login</button>
+    <button class="btn-add" id="addBtn" onclick="openAdd()"><i class="ti ti-plus" aria-hidden="true"></i> Add publication</button>
+  </div>
+</div>
+
+<div class="executive-summary">
+  <div class="summary-head">
+    <div class="summary-title">Executive summary</div>
+    <div class="summary-tag">Board-ready overview</div>
+  </div>
+  <div class="summary-grid">
+    <div class="summary-kpi">
+      <div class="kpi-label">Portfolio size</div>
+      <div class="kpi-value" id="summaryTotal">0</div>
+      <div class="kpi-meta">total publications</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="kpi-label">Scopus share</div>
+      <div class="kpi-value" id="summaryScopus">0</div>
+      <div class="kpi-meta">indexed works</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="kpi-label">Q1 output</div>
+      <div class="kpi-value" id="summaryQ1">0</div>
+      <div class="kpi-meta">high-impact papers</div>
+    </div>
+    <div class="summary-kpi">
+      <div class="kpi-label">In progress</div>
+      <div class="kpi-value" id="summaryProgress">0</div>
+      <div class="kpi-meta">active pipeline</div>
+    </div>
+  </div>
+</div>
+
+<div class="metrics" id="metrics"></div>
+
+<div class="charts-row">
+  <div class="chart-card">
+    <h3>Publications per year <span id="yearFilterBadge"></span></h3>
+    <div style="position:relative;height:180px"><canvas id="yearChart" role="img" aria-label="Bar chart of publications per year"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>By status <span id="statusFilterBadge"></span></h3>
+    <div id="statusLegend" class="legend"></div>
+    <div style="position:relative;height:150px"><canvas id="statusChart" role="img" aria-label="Doughnut chart of status distribution"></canvas></div>
+  </div>
+</div>
+
+<div class="charts-row">
+  <div class="chart-card">
+    <h3>Quartile breakdown <span id="quartileFilterBadge"></span></h3>
+    <div id="qLegend" class="legend"></div>
+    <div style="position:relative;height:150px"><canvas id="quartileChart" role="img" aria-label="Doughnut chart of quartile distribution"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h3>Type breakdown <span id="typeFilterBadge"></span></h3>
+    <div id="typeLegend" class="legend"></div>
+    <div style="position:relative;height:150px"><canvas id="typeChart" role="img" aria-label="Doughnut chart of type distribution"></canvas></div>
+  </div>
+</div>
+
+<div class="table-section">
+  <div class="table-header">
+    <h3>Publications</h3>
+    <div class="table-header-actions">
+      <span class="count-info" id="countInfo"></span>
+      <button class="reset-btn" onclick="resetFilters()"><i class="ti ti-refresh" aria-hidden="true"></i> Reset</button>
+    </div>
+  </div>
+  <div class="filter-row">
+    <input type="text" id="searchInput" placeholder="Search title or journal..." oninput="applyFilters()">
+    <div class="multi-filter" data-filter="year">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All years <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterYear"></div>
+    </div>
+    <div class="multi-filter" data-filter="status">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All status <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterStatus"></div>
+    </div>
+    <div class="multi-filter" data-filter="type">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All types <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterType"></div>
+    </div>
+    <div class="multi-filter" data-filter="index">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All index <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterIndex"></div>
+    </div>
+    <div class="multi-filter" data-filter="author">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All roles <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterAuthor"></div>
+    </div>
+    <div class="multi-filter" data-filter="project">
+      <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All projects <span>&#9662;</span></button>
+      <div class="multi-filter-menu" id="filterProject"></div>
+    </div>
+  </div>
+  <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th style="min-width:240px">Title / Journal</th><th>Year</th>
+          <th>Quartil</th><th>Type</th><th>Status</th><th>Index</th><th>Role</th><th>Project</th><th>Edit</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="pagination">
+    <button id="prevBtn" onclick="changePage(-1)"><i class="ti ti-chevron-left"></i></button>
+    <span id="pageInfo"></span>
+    <button id="nextBtn" onclick="changePage(1)"><i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<div id="loginModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeLoginModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>Editor access</h2>
+    <div class="login-box">
+      <p>Masuk dengan username dan password untuk mengakses fitur editor. Akun admin dapat menambah, mengubah, dan menghapus data. Akun lain akan terbatas sebagai viewer.</p>
+      <div class="login-demo">
+        <label for="loginUsername" style="font-size:12px;font-weight:600;color:var(--color-text-secondary)">Username</label>
+        <input id="loginUsername" type="text" placeholder="andrisjku">
+        <label for="loginPassword" style="font-size:12px;font-weight:600;color:var(--color-text-secondary)">Password</label>
+        <input id="loginPassword" type="password" placeholder="••••••••">
+        <button type="button" onclick="loginWithCredentials()">Continue as editor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="detailPanel" class="detail-panel" style="display:none">
+  <div class="detail-header">
+    <h3>Publication detail</h3>
+    <button class="detail-close" onclick="closeDetailPanel()">Close</button>
+  </div>
+  <div class="detail-body" id="detailBody"></div>
+</div>
+
+<div id="modalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2 id="modalTitle">Add publication</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Title</label>
+        <textarea id="fTitle" rows="2"></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Journal / Proceeding</label>
+        <input type="text" id="fJournal">
+      </div>
+      <div class="form-group full">
+        <label>Publisher</label>
+        <input type="text" id="fPublisher">
+      </div>
+      <div class="form-group full">
+        <label>DOI / Link</label>
+        <input type="url" id="fLink" placeholder="https://doi.org/... or publication URL">
+      </div>
+      <div class="form-group">
+        <label>Year</label>
+        <input type="number" id="fYear" min="2000" max="2030" value="2026">
+      </div>
+      <div class="form-group">
+        <label>Quartile</label>
+        <select id="fQuartile">
+          <option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option>
+          <option>Non Q</option><option>Sinta 1</option><option>Sinta 2</option>
+          <option>Sinta 3</option><option>Sinta 4</option><option>Sinta 5</option><option>Sinta 6</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="fType">
+          <option>Journal</option><option>Conference</option><option>Book Chapter</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="fStatus">
+          <option>Draft</option><option>Submitted</option><option>Under Review</option>
+          <option>Revision</option><option>Accepted</option><option>Published</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Index</label>
+        <select id="fIndex"><option>Scopus</option><option>Non-Scopus</option></select>
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="fAuthor"><option>First Author</option><option>Co-Author</option></select>
+      </div>
+      <div class="form-group">
+        <label>Project</label>
+        <select id="fProject"><option>PhD</option><option>Non-PhD</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="progressModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeProgressModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>Edit publication</h2>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Title</label>
+        <textarea id="progressTitle" rows="3"></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Journal / Proceeding</label>
+        <input type="text" id="progressJournal">
+      </div>
+      <div class="form-group full">
+        <label>DOI / Link</label>
+        <input type="url" id="progressLink" placeholder="https://doi.org/... or publication URL">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="progressStatus">
+          <option>Draft</option><option>Submitted</option><option>Under Review</option>
+          <option>Revision</option><option>Accepted</option><option>Published</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Quartile</label>
+        <select id="progressQuartile">
+          <option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option>
+          <option>Non Q</option><option>Sinta 1</option><option>Sinta 2</option>
+          <option>Sinta 3</option><option>Sinta 4</option><option>Sinta 5</option><option>Sinta 6</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Index</label>
+        <select id="progressIndex"><option>Scopus</option><option>Non-Scopus</option></select>
+      </div>
+      <div class="form-group">
+        <label>Project</label>
+        <select id="progressProject"><option>PhD</option><option>Non-PhD</option></select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-delete" onclick="deleteProgressPublication()">Delete</button>
+      <button class="btn-cancel" onclick="closeProgressModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProgress()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+<script>
+let pubs = [
+  {id:1,a:"First Author",t:"HUBUNGAN ANTARA PRESTASI KEWIRAUSAHAAN...",j:"Jurnal Nosel",y:2014,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:2,a:"Co-Author",t:"Pengembangan Intake Manifold Dengan Bahan Dasar Komposit (Serat Nanas)",j:"Pros. Semnas UNS Vocational Day",y:2017,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:3,a:"First Author",t:"The Effect of Completeness of Facilities on the Learning Outcome in Lathe Practice",j:"VEIC 2019",y:2019,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:4,a:"First Author",t:"Assignment and Monitoring Information System of Prakerin Students Based On SMS Gateway",j:"VANOS Journal",y:2020,q:"Non Q",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:5,a:"Co-Author",t:"A Practicum Learning Management Model for Productive Materials Based on Industry 4.0",j:"IJICC",y:2020,q:"Q4",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:6,a:"Co-Author",t:"PENGEMBANGAN JOBSHEET UNTUK MENINGKATKAN KUALITAS PEMBELAJARAN",j:"J. Mechanical Engineering Learning",y:2020,q:"Sinta 6",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:7,a:"Co-Author",t:"Analysis of student satisfaction of e-learning using EUCS during Covid-19 pandemic",j:"J. Physics: Conference Series",y:2020,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:8,a:"Co-Author",t:"Pelatihan Penyusunan Modul Pembelajaran Pada Kompetensi Keahlian Teknik Kendaraan Ringan",j:"Pros. Semnas Pengabdian Masyarakat",y:2020,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:9,a:"Co-Author",t:"Entrepreneurship Education in Indonesia",j:"Education at the Intersection of Globalization and Technology",y:2021,q:"Non Q",type:"Book Chapter",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:10,a:"Co-Author",t:"Comparison of testing load cell sensor data sampling method",j:"IOP Conf. Series: EES",y:2021,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:11,a:"First Author",t:"Usability evaluation of assignment and monitoring information learning system",j:"IOP Conf. Series: EES",y:2021,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:12,a:"First Author",t:"The Effect of Pandemic Covid-19 into Internship Activity of Mojokerto Vocational High Schools",j:"J. Vocational Education Studies",y:2021,q:"Sinta 2",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:13,a:"Co-Author",t:"Evaluating the Impact of Audio-Visual Media on Learning Outcomes of Drawing Orthographic Projections",j:"Int. J. Education and Practice",y:2021,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:14,a:"First Author",t:"Sosialisai pentingnya vaksinasi di masa pandemi covid-19 di Kabupaten Pemalang",j:"Pros. Semnas UAD",y:2021,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:15,a:"First Author",t:"Peningkatan Pemahaman Siswa Melalui Program Pendampingan Belajar Di Kabupaten Pemalang",j:"Pros. Semnas UAD",y:2021,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:16,a:"First Author",t:"Internship Regulations in Vocational Secondary Schools during the Covid-19 Pandemic",j:"VANOS Journal",y:2021,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:17,a:"First Author",t:"Pembekalan Manajemen Energi Efektif Pemasangan Sel Surya Di Kandang Ternak",j:"J-Abdi",y:2021,q:"Sinta 6",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:18,a:"First Author",t:"Development of hydraulic cylinder excavator learning media based on augmented reality with Shapr 3D",j:"J. Physics: Conference Series",y:2021,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:19,a:"First Author",t:"Diesel engine performance test using solar-dex and biodiesel (B30) on power and torque",j:"IOP Conf. Series: EES",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:20,a:"First Author",t:"Design and production of multifunctional food oven with energy-saving gas fuel",j:"IOP Conf. Series: EES",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:21,a:"Co-Author",t:"The relationship of traders' activities to the quality of city park (Taman Sampangan Semarang)",j:"IOP Conf. Series: EES",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:22,a:"Co-Author",t:"Design and static testing of electric vehicle chassis trike front-wheel drive",j:"IOP Conf. Series: EES",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:23,a:"Co-Author",t:"Non Formal Vocational School during Covid-19 Pandemic",j:"IConVET 2021",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:24,a:"Co-Author",t:"Pelatihan peningkatan kompetensi evaluasi autentik dalam pembelajaran merdeka belajar MBKM",j:"J. Pengabdian Mandiri",y:2022,q:"Sinta 6",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:25,a:"Co-Author",t:"MESIN TIMBANG OTOMATIS DALAM RANGKA MENINGKATKAN PRODUKTIVITAS USAHA PENGEMASAN BERAS",j:"J. Pengabdian Mandiri",y:2022,q:"Sinta 6",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:26,a:"Co-Author",t:"Factors Affecting the Effectiveness of Online Learning During the Covid-19 Pandemic",j:"VEIC 2022",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:27,a:"Co-Author",t:"Analisis Kuat Suara Pada Knalpot Tipe Free Flow Dan Conical Silencer",j:"J. Pendidikan Teknik Mesin",y:2022,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:28,a:"First Author",t:"Wireless engine diagnostic tool based on IoT with PiOBD-II using Raspberry on Honda Jazz VTEC",j:"J. Physics: Conference Series",y:2022,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:29,a:"Co-Author",t:"Analysis of Students' Satisfaction Levels in Hybrid Learning",j:"Proc. VEIC 2022",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:30,a:"Co-Author",t:"Project Based Learning (PjBL) for Vocational",j:"Proc. VEIC 2022",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:31,a:"Co-Author",t:"The Relationship of Self-directed Learning Readiness (SDLR) with Creative Thinking Skills",j:"Proc. VEIC 2022",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:32,a:"Co-Author",t:"The analysis of student satisfaction in online learning with microsoft teams application",j:"AIP Conference Proceedings",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:33,a:"Co-Author",t:"Investigating the effect of deacetylation temperature on the characterization of chitosan from crab shells",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2023,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:34,a:"Co-Author",t:"The Effects of Alternative Fuel Mixture of HDPE Plastic and Gasoline on Four-Stroke Engine",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2023,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:35,a:"Co-Author",t:"Design, manufacturing and characterization of biodegradable bone screw from PLA (FDM 3D printing)",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2023,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:36,a:"Co-Author",t:"Power optimization of the horizontal axis wind turbine capacity of 1 MW",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2023,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:37,a:"Co-Author",t:"Numerical approach of fishing vessel hull form to measure resistance profile",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2023,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:38,a:"First Author",t:"Development of learning media for automotive measuring instrument based on android",j:"3rd Borobudur Int. Symposium",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:39,a:"Co-Author",t:"Orbital Performance Simulation of Ring Type Electro Motor Compared with Radial Motor",j:"VANOS Journal",y:2023,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:40,a:"First Author",t:"Design of Wireless Engine Diagnostic Tool with Raspberry Pi for Learning Media",j:"VANOS Journal",y:2023,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:41,a:"Co-Author",t:"Redesign of Trans-Semarang Bus Stop at Prof. Soedarto Segment",j:"IOP Conf. Series: EES",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:42,a:"First Author",t:"Diesel engine performance using Pertamina Dex and Biodiesel (B30) on RPM and fuel consumption",j:"IOP Conf. Series: EES",y:2023,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:43,a:"Co-Author",t:"Implementasi Diagnosa Sistem Injeksi Self-Diagnose Kendaraan Menggunakan Aplikasi Berbasis Android",j:"J. Pengabdian Kepada Masyarakat",y:2023,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:44,a:"Co-Author",t:"Pengembangan Young Technopreneur Unnes Melalui Pengelolaan Usaha Berbasis Digital Entrepreneur",j:"SELAPARANG",y:2023,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:45,a:"Co-Author",t:"Engine Power Optimation with Bioethanol Fuel: An Experimental Study",j:"Research and Developments in Engineering Research Vol. 4",y:2023,q:"Non Q",type:"Book Chapter",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:46,a:"Co-Author",t:"The Implementation of Plasticine Wax Media to Increase Lathe Chisel Geometry Understanding",j:"VEIC-5 2023",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:47,a:"First Author",t:"Modeling Measuring Instrument Learning Media (MILM) in Block System Practicum",j:"VEIC-5 2023",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:48,a:"Co-Author",t:"Effectiveness of Implementing Android-Based Variable Valve Actuation (VVA) Media",j:"VEIC-5 2023",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:49,a:"Co-Author",t:"Classroom Management of Motorcycle and Small Motor Practice Using the Block Teaching",j:"VEIC-5 2023",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:50,a:"First Author",t:"Sosialisai Kendaraan Listrik Berbasis Baterai (KLBB) bagi driver online",j:"SELAPARANG",y:2024,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:51,a:"Co-Author",t:"Analysis of variation of cone angle and cone distance on the development of low pollution muffler",j:"AIP Conference Proceedings",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:52,a:"First Author",t:"Electronic Learning Media E-Module Open Source-Based on Planetary Type Starter System",j:"Elinvo",y:2024,q:"Sinta 2",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:53,a:"First Author",t:"Workshop Pembelajaran Untuk Meningkatkan Keterampilan Guru Kejuruan Dengan Articulate Storyline",j:"JURPIKAT",y:2024,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:54,a:"First Author",t:"Workshop Kewirausahaan Dalam Membuat Iklan Digital yang Inovatif menggunakan Canva",j:"JURPIKAT",y:2024,q:"Sinta 4",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:55,a:"Co-Author",t:"Visual inspection and non-destructive test (NDT) on ASTM A36 welded joints produced by GMAW",j:"Int. J. Integrated Engineering",y:2024,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:56,a:"First Author",t:"A Review of the Application of Smart Building in Unnes Entrepreneurship Building (KWU)",j:"IOP Conf. Series: EES",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:57,a:"First Author",t:"Production and Investigation of the 150 CC Engine Performance with Bioethanol",j:"IOP Conf. Series: EES",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:58,a:"Co-Author",t:"Impact of biodiesel blends on specific fuel consumption: A meta-analysis",j:"IOP Conf. Series: EES",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:59,a:"Co-Author",t:"Downdraft Gasifier for Oil Palm Empty Bunches with Computational Fluid Dynamics",j:"IOP Conf. Series: EES",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:60,a:"Co-Author",t:"An aerodynamic analysis of energy saving car based on computational fluid dynamic using solidworks",j:"AIP Conference Proceedings",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:61,a:"First Author",t:"Characterization of bioethanol from fermented oryza sativa glutinosa as an alternative renewable fuel",j:"BIS Energy and Engineering",y:2024,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:62,a:"Co-Author",t:"Simulation of Torque, Tip Speed Ratio, Power and Power Coefficient of 1 MW Horizontal Axis Wind Turbine",j:"J. Adv. Research Fluid Mech. & Thermal Sci.",y:2024,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:63,a:"First Author",t:"Innovative Media for Teaching and Learning Engineering Drawing",j:"Int. J. Engineering Education",y:2025,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"PhD"},
+  {id:64,a:"Co-Author",t:"The effectiveness of contextual teaching and learning (CTL) in improving cognitive learning outcomes",j:"J. Pemberdayaan Masyarakat",y:2025,q:"Sinta 2",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:65,a:"First Author",t:"Performance of honda GK5 engine with VTEC re-construction camshaft for drag race purpose",j:"AIP Conference Proceedings",y:2025,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:66,a:"First Author",t:"Development of audio video-based catalytic converter trainer media",j:"AIP Conference Proceedings",y:2025,q:"Non Q",type:"Conference",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:67,a:"First Author",t:"How orthographic projection engineering drawing support VHS students in their future career",j:"Int. J. Mechanical Engineering Education",y:2025,q:"Q2",type:"Journal",s:"Published",i:"Scopus",p:"PhD"},
+  {id:68,a:"First Author",t:"Integrating 3D modeling and printing in automotive component prototyping",j:"Technology, Knowledge and Learning",y:2025,q:"Q1",type:"Journal",s:"Published",i:"Scopus",p:"PhD"},
+  {id:69,a:"First Author",t:"Design the Orthographic Projection on Engineering Drawing module based on Project-based with 3D Printing",j:"PROJECT-BASED EDUCATION AND ISSUES IN STE(A)M EDUCATION XXII",y:2025,q:"Non Q",type:"Conference",s:"Published",i:"Non-Scopus",p:"PhD"},
+  {id:70,a:"First Author",t:"Measuring Teachers' Competencies for AI Integration: Development and Validation of the AI-TPACK",j:"Computers and Education Open",y:2025,q:"Q1",type:"Journal",s:"Published",i:"Scopus",p:"PhD"},
+  {id:71,a:"Co-Author",t:"Developing Industry-Relevant Soft Skills Through Peer-Engaged Project Application Model (PEPA)",j:"J. Applied Engineering and Technological Science",y:2025,q:"Q4",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:72,a:"First Author",t:"Essential Soft Skills for Engineering in Industry 4.0: A Systematic Literature Review",j:"Int. J. Engineering Education",y:2025,q:"Q3",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:73,a:"Co-Author",t:"Development and Effectiveness of a K3LH E-Module to Improve Learning Outcomes",j:"Rekayasa",y:2025,q:"Sinta 3",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:74,a:"First Author",t:"Assessing the Feasibility of Android-Based Learning Media for Common Rail Diesel System Maintenance",j:"J. Innovation in STEAM Education",y:2025,q:"Non Q",type:"Journal",s:"Published",i:"Non-Scopus",p:"Non-PhD"},
+  {id:75,a:"Co-Author",t:"Design, Fabrication and Performance Test of Arduino-Based Automatic Cutting Tool for Coconut Shell Charcoal Briquettes",j:"J. Advanced Research Design",y:2026,q:"Q4",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:76,a:"First Author",t:"Developing and evaluating anti-lock braking systems (ABS) through a STEM-based digital learning module",j:"Int. J. Mechanical Engineering Education",y:2026,q:"Q2",type:"Journal",s:"Published",i:"Scopus",p:"Non-PhD"},
+  {id:77,a:"First Author",t:"Teaching Orthographic Projection in Engineering Drawing in TVET: Pedagogical Challenges and Technological Opportunities",j:"European J. STEM Education",y:2026,q:"Q1",type:"Journal",s:"Published",i:"Scopus",p:"PhD"},
+  {id:78,a:"First Author",t:"Exploring the Integration of Self-Regulated Learning Approaches in engineering technology and TVET",j:"European J. Engineering Education",y:2026,q:"Q1",type:"Journal",s:"Revision",i:"Scopus",p:"PhD"},
+  {id:79,a:"First Author",t:"Investigating Digital Literacy in 3D Modeling Engineering Drawing",j:"HSSCOM",y:2026,q:"Q1",type:"Journal",s:"Under Review",i:"Scopus",p:"PhD"},
+  {id:80,a:"First Author",t:"Understanding Pre-Service Vocational Teachers' Perceptions of AI in Engineering Drawing Through Perceived Benefit",j:"Technology, Knowledge, and Learning",y:2026,q:"Q1",type:"Journal",s:"Revision",i:"Scopus",p:"PhD"},
+  {id:81,a:"First Author",t:"Investigating 3D Modeling Understanding in TVET for Engineering Education: A Rasch analysis",j:"IJTME",y:2026,q:"Q3",type:"Journal",s:"Accepted",i:"Scopus",p:"PhD"},
+  {id:82,a:"First Author",t:"History of 3DMP",j:"Techtrend",y:2026,q:"Q1",type:"Journal",s:"Under Review",i:"Scopus",p:"PhD"},
+  {id:83,a:"First Author",t:"Preparing Future Vocational Teachers for AI-Enhanced Instruction through 3D Modeling and Printing",j:"JAHRE",y:2026,q:"Q1",type:"Journal",s:"Under Review",i:"Scopus",p:"PhD"},
+  {id:84,a:"First Author",t:"3DMP integration in vocational education: Scoping review",j:"Int. J. STEM Education",y:2026,q:"Q1",type:"Journal",s:"Draft",i:"Scopus",p:"PhD"},
+  {id:85,a:"First Author",t:"Integrating 3DMP and AI-Assisted Instructional Design in Engineering Drawing",j:"World Vocational and Technical Education",y:2026,q:"Non Q",type:"Journal",s:"Revision",i:"Scopus",p:"PhD"},
+  {id:86,a:"First Author",t:"A Raspberry Pi-Based Thermal Monitoring and Data Logging System for Electric Motorcycles",j:"Discover Sustainability",y:2026,q:"Q1",type:"Journal",s:"Under Review",i:"Scopus",p:"Non-PhD"},
+  {id:87,a:"Co-Author",t:"From 3D Modeling Knowledge to Behavioral Intention for Technology Use",j:"IJERE",y:2026,q:"Q2",type:"Journal",s:"Accepted",i:"Scopus",p:"PhD"},
+  {id:88,a:"First Author",t:"Examining the Role of Perceived Usefulness in Vocational Pre-Service Teachers",j:"IJERE",y:2026,q:"Q2",type:"Journal",s:"Accepted",i:"Scopus",p:"PhD"},
+];
+
+let nextId = 89;
+let filtered = [...pubs], page = 1;
+const perPage = 15;
+let editingId = null;
+let progressEditingId = null;
+let charts = {};
+let isAdmin = false;
+let currentUser = null;
+let presentationMode = false;
+
+const runtimeConfig = {
+  googleClientId: (window.GOOGLE_CLIENT_ID && String(window.GOOGLE_CLIENT_ID).trim()) || "",
+  adminEmails: Array.from(new Set([
+    ...(Array.isArray(window.ADMIN_EMAILS) ? window.ADMIN_EMAILS : []),
+    "andri.setiyawan@gmail.com",
+    "admin@andri.dev"
+  ])).filter(Boolean).map(email => String(email).trim().toLowerCase())
+};
+const GOOGLE_CLIENT_ID = runtimeConfig.googleClientId;
+const ADMIN_EMAILS = runtimeConfig.adminEmails;
+const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1c6RE5vazqU8uu8TXdrAv28bg8VAWGei5cdIDHCIaqnA/export?format=csv&gid=0";
+const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyamJFkaKZxTqGaFR1OZdG7XUvzbQauEc1jFRoExt0oZ7J0o-glnLt0C8A71WwDjgdjQQ/exec";
+const fallbackPubs = pubs.map(d=>({...d}));
+
+function canEdit(){return isAdmin;}
+
+function getStoredAuth(){
+  try{ return JSON.parse(localStorage.getItem('publication-dashboard-auth') || 'null') || {email:'',admin:false}; }
+  catch{ return {email:'',admin:false}; }
+}
+
+function persistAuth(auth){ localStorage.setItem('publication-dashboard-auth', JSON.stringify(auth)); }
+
+function setAccessState(user, admin){
+  currentUser = user || null;
+  isAdmin = !!admin;
+  const badge = document.getElementById('accessBadge');
+  const loginBtn = document.getElementById('loginBtn');
+  const addBtn = document.getElementById('addBtn');
+  if (badge) badge.textContent = isAdmin ? 'Admin editor' : (currentUser ? 'Viewer access' : 'Viewer mode');
+  if (loginBtn) loginBtn.innerHTML = isAdmin ? '<i class="ti ti-shield-check"></i> Admin logged in' : '<i class="ti ti-user-circle"></i> Login';
+  if (addBtn) addBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+  renderTable();
+}
+
+function toggleDarkMode(){
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('publication-dashboard-theme', isDark ? 'dark' : 'light');
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.innerHTML = isDark ? '<i class="ti ti-sun"></i> Light mode' : '<i class="ti ti-moon"></i> Dark mode';
+}
+
+function applySavedTheme(){
+  const savedTheme = localStorage.getItem('publication-dashboard-theme') || 'light';
+  if (savedTheme === 'dark') document.body.classList.add('dark-mode');
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="ti ti-sun"></i> Light mode' : '<i class="ti ti-moon"></i> Dark mode';
+}
+
+function decodeJwt(jwt){
+  try{
+    const payload = jwt.split('.')[1];
+    const normalized = payload.replace(/-/g,'+').replace(/_/g,'/');
+    const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+    const decoded = atob(padded);
+    return JSON.parse(decodeURIComponent(Array.from(decoded).map(char => '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)).join('')));
+  } catch {
+    return {};
+  }
+}
+
+function handleGoogleCredential(response){
+  const payload = decodeJwt(response.credential || '');
+  const email = String(payload.email || '').toLowerCase();
+  const admin = ADMIN_EMAILS.includes(email);
+  currentUser = {email, name: payload.name || email};
+  isAdmin = admin;
+  persistAuth({email, admin, username: currentUser.name});
+  setAccessState(currentUser, admin);
+  closeLoginModal();
+  if (!admin) alert('Login berhasil sebagai viewer. Editing dibatasi hanya untuk admin.');
+}
+
+function initializeGoogleSignIn(){
+  const notice = document.getElementById('googleOAuthNotice');
+  const signInButton = document.getElementById('googleSignInButton');
+
+  if (!GOOGLE_CLIENT_ID) {
+    if (notice) {
+      notice.style.display = 'block';
+      notice.textContent = 'Google OAuth Client ID belum dikonfigurasi. Set window.GOOGLE_CLIENT_ID atau replace constant di file ini untuk login sesungguhnya.';
+    }
+    if (signInButton) {
+      signInButton.innerHTML = '<div style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;padding:8px 0;">Production OAuth belum aktif. Tambahkan Client ID Google untuk mengaktifkan login nyata.</div>';
+    }
+    return;
+  }
+
+  if (!window.google || !window.google.accounts) {
+    if (notice) {
+      notice.style.display = 'block';
+      notice.textContent = 'Google Identity Services belum siap. Pastikan script gsi/client sudah dimuat sebelum render login.';
+    }
+    return;
+  }
+
+  window.google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    auto_select: false,
+    cancel_on_tap_outside: false
+  });
+
+  if (signInButton) {
+    signInButton.innerHTML = '';
+    window.google.accounts.id.renderButton(signInButton, {
+      theme: 'outline',
+      size: 'large',
+      width: 280,
+      text: 'continue_with',
+      locale: 'en'
+    });
+  }
+
+  if (notice) {
+    notice.style.display = 'none';
+    notice.textContent = '';
+  }
+}
+
+function openLoginModal(){ document.getElementById('loginModalBg').style.display = 'flex'; }
+function closeLoginModal(){ document.getElementById('loginModalBg').style.display = 'none'; }
+
+function loginWithCredentials(){
+  const usernameInput = document.getElementById('loginUsername');
+  const passwordInput = document.getElementById('loginPassword');
+  const username = String(usernameInput.value || '').trim();
+  const password = String(passwordInput.value || '');
+
+  if (!username || !password) {
+    alert('Username dan password harus diisi.');
+    return;
+  }
+
+  const admin = username === 'andrisjku' && password === 'Linz2024@@';
+  currentUser = {email: username, name: username};
+  isAdmin = admin;
+  persistAuth({email: username, admin, username});
+  setAccessState(currentUser, admin);
+  closeLoginModal();
+
+  if (admin) {
+    alert('Login berhasil sebagai admin editor.');
+  } else {
+    alert('Username atau password salah. Akses terbatas sebagai viewer.');
+  }
+}
+
+function restoreAuthState(){
+  const stored = getStoredAuth();
+  const username = String(stored && (stored.username || stored.email) || '').trim();
+  if (username) {
+    currentUser = {email: username, name: username};
+    isAdmin = !!stored.admin;
+  }
+  setAccessState(currentUser, isAdmin);
+}
+
+function exportCsv(){
+  const rows = filtered.length ? filtered : pubs;
+  const headers = ['id','title','journal','publisher','link','year','quartile','type','status','index','role','project'];
+  const csv = [headers.join(',')].concat(rows.map(row => headers.map(header => {
+    const value = {
+      id: row.id || '',
+      title: row.t || '',
+      journal: row.j || '',
+      publisher: row.publisher || '',
+      link: getPublicationUrl(row) || '',
+      year: row.y || '',
+      quartile: row.q || '',
+      type: row.type || '',
+      status: row.s || '',
+      index: row.i || '',
+      role: row.a || '',
+      project: row.p || ''
+    }[header] || '');
+    return '"' + String(value).replace(/"/g, '""') + '"';
+  }).join(',')).join('\n'));
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'publication-monitoring.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportPdf(){
+  if (!window.jspdf) {
+    window.print();
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  let y = 40;
+  doc.setFontSize(16);
+  doc.text('Publication monitoring Andri', 40, y);
+  y += 18;
+  doc.setFontSize(10);
+  doc.text(`Total records: ${filtered.length}`, 40, y);
+  y += 18;
+  const rows = filtered.slice(0, 25).map((d, index) => [String(index + 1), d.t, d.y, d.q, d.s]);
+  rows.forEach(row => {
+    if (y > 760) { doc.addPage(); y = 40; }
+    doc.text(row.map(String).join(' | '), 40, y, { maxWidth: 500 });
+    y += 16;
+  });
+  doc.save('publication-monitoring.pdf');
+}
+
+function applyDarkModeFromStorage(){
+  const mode = localStorage.getItem('publication-dashboard-theme') || 'light';
+  if (mode === 'dark') document.body.classList.add('dark-mode');
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="ti ti-sun"></i> Light mode' : '<i class="ti ti-moon"></i> Dark mode';
+}
+
+function togglePresentationMode(){
+  presentationMode = !presentationMode;
+  document.body.classList.toggle('presentation-mode', presentationMode);
+  const btn = document.getElementById('presentationToggle');
+  if (btn) btn.innerHTML = presentationMode ? '<i class="ti ti-layout-dashboard"></i> Standard view' : '<i class="ti ti-presentation"></i> Presentation';
+}
+
+function openDetailPanel(id){
+  const item = pubs.find(d => d.id === id);
+  if (!item) return;
+  const detailBody = document.getElementById('detailBody');
+  detailBody.innerHTML = `
+    <div class="preview-block">
+      <div class="preview-label">Title</div>
+      <div class="preview-value">${item.t}</div>
+    </div>
+    <div class="preview-block">
+      <div class="preview-label">Journal / Venue</div>
+      <div class="preview-value">${item.j}</div>
+    </div>
+    <div class="preview-block">
+      <div class="preview-label">Status</div>
+      <div class="preview-value"><span class="badge ${statusClass(item.s)}">${item.s}</span></div>
+    </div>
+    <div class="preview-block">
+      <div class="preview-label">Metrics</div>
+      <div class="preview-value">Year: ${item.y} • Quartile: ${item.q} • Type: ${item.type} • Index: ${item.i} • Role: ${item.a}</div>
+    </div>
+    <div class="preview-block">
+      <div class="preview-label">Project</div>
+      <div class="preview-value">${item.p}</div>
+    </div>
+    <div class="detail-actions">
+      ${item.link ? `<a class="detail-link" href="${formatPublicationUrl(item.link)}" target="_blank" rel="noopener">Open publication</a>` : ''}
+      <button class="detail-close" onclick="openEdit(${item.id})">Edit</button>
+    </div>
+  `;
+  document.getElementById('detailPanel').style.display = 'flex';
+}
+
+function closeDetailPanel(){
+  document.getElementById('detailPanel').style.display = 'none';
+}
+
+const filterConfig = {
+  filterYear:{all:"All years",values:()=>[...new Set(pubs.map(d=>d.y))].sort((a,b)=>a-b)},
+  filterStatus:{all:"All status",values:()=>["Published","Accepted","Revision","Under Review","Submitted","Draft"]},
+  filterType:{all:"All types",values:()=>["Journal","Conference","Book Chapter"]},
+  filterIndex:{all:"All index",values:()=>["Scopus","Non-Scopus"]},
+  filterAuthor:{all:"All roles",values:()=>["First Author","Co-Author"]},
+  filterProject:{all:"All projects",values:()=>["PhD","Non-PhD"]},
+};
+
+function renderFilterOptions(id){
+  const menu=document.getElementById(id);
+  const selected=getCheckedValues(id);
+  menu.innerHTML=filterConfig[id].values().map(v=>`
+    <label class="multi-filter-option">
+      <input type="checkbox" value="${v}" ${selected.includes(String(v))?"checked":""} onchange="applyFilters()">
+      <span>${v}</span>
+    </label>`).join("");
+  updateFilterButton(id);
+}
+
+function renderAllFilterOptions(){
+  Object.keys(filterConfig).forEach(renderFilterOptions);
+}
+
+function getCheckedValues(id){
+  return [...document.querySelectorAll(`#${id} input:checked`)].map(input=>input.value);
+}
+
+function toggleFilterMenu(btn){
+  const wrapper=btn.closest(".multi-filter");
+  document.querySelectorAll(".multi-filter.open").forEach(el=>{if(el!==wrapper)el.classList.remove("open");});
+  wrapper.classList.toggle("open");
+}
+
+function updateFilterButton(id){
+  const menu=document.getElementById(id);
+  const btn=menu.previousElementSibling;
+  const selected=getCheckedValues(id);
+  btn.classList.toggle("active",selected.length>0);
+  btn.innerHTML=`${selected.length?selected.length+" selected":filterConfig[id].all} <span>&#9662;</span>`;
+}
+
+function updateAllFilterButtons(){
+  Object.keys(filterConfig).forEach(updateFilterButton);
+}
+
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".multi-filter")){
+    document.querySelectorAll(".multi-filter.open").forEach(el=>el.classList.remove("open"));
+  }
+});
+
+function parseCsv(text){
+  const rows=[];
+  let row=[], cell="", inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i], next=text[i+1];
+    if(c==='"'&&inQuotes&&next==='"'){cell+='"';i++;continue;}
+    if(c==='"'){inQuotes=!inQuotes;continue;}
+    if(c===","&&!inQuotes){row.push(cell);cell="";continue;}
+    if((c==="\n"||c==="\r")&&!inQuotes){
+      if(c==="\r"&&next==="\n")i++;
+      row.push(cell); rows.push(row); row=[]; cell="";
+      continue;
+    }
+    cell+=c;
+  }
+  if(cell||row.length){row.push(cell);rows.push(row);}
+  return rows.filter(r=>r.some(v=>String(v).trim()));
+}
+
+function normalizeProject(value){
+  return value==="PhD" ? "PhD" : "Non-PhD";
+}
+
+function getPublicationUrl(d){
+  return d.link || d.doi || "";
+}
+
+function formatPublicationUrl(value){
+  const text=String(value||"").trim();
+  if(!text)return "";
+  if(/^https?:\/\//i.test(text))return text;
+  if(/^10\.\S+\/\S+/i.test(text))return `https://doi.org/${text}`;
+  return text;
+}
+
+function mapSheetRows(rows){
+  if(rows.length<2)return [];
+  const headers=rows[0].map(h=>String(h).trim().toLowerCase());
+  const get=(row,name)=>{
+    const idx=headers.indexOf(name.toLowerCase());
+    return idx>=0 ? String(row[idx]||"").trim() : "";
+  };
+  return rows.slice(1).map((row,idx)=>({
+    id:idx+1,
+    rowNumber:idx+2,
+    a:get(row,"Author")||"First Author",
+    t:get(row,"Title"),
+    j:get(row,"Jurnal"),
+    publisher:get(row,"Publisher"),
+    link:get(row,"Link")||get(row,"DOI")||get(row,"Doi"),
+    y:parseInt(get(row,"Year"),10)||new Date().getFullYear(),
+    q:get(row,"Quartil")||"Non Q",
+    type:get(row,"Type")||"Journal",
+    s:get(row,"Status")||"Draft",
+    i:get(row,"Index")||"Non-Scopus",
+    p:normalizeProject(get(row,"Project")),
+  })).filter(d=>d.t&&d.j);
+}
+
+async function loadGoogleSheetData(){
+  try{
+    const res=await fetch(`${GOOGLE_SHEET_CSV_URL}&t=${Date.now()}`);
+    if(!res.ok)throw new Error(`Sheet request failed: ${res.status}`);
+    const rows=parseCsv(await res.text());
+    const sheetPubs=mapSheetRows(rows);
+    if(sheetPubs.length){
+      pubs=sheetPubs;
+      nextId=Math.max(...pubs.map(d=>d.id))+1;
+    }
+  }catch(err){
+    console.warn("Using embedded publication data because Google Sheet could not be loaded.",err);
+    pubs=fallbackPubs.map(d=>({...d,p:normalizeProject(d.p)}));
+    nextId=Math.max(...pubs.map(d=>d.id))+1;
+  }
+  filtered=[...pubs];
+}
+
+async function syncGoogleSheet(action,payload){
+  if(!GOOGLE_SHEET_API_URL)return false;
+  if(GOOGLE_SHEET_API_URL.includes("script.google.com")){
+    await fetch(GOOGLE_SHEET_API_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({action,payload})
+    });
+    return {ok:true,opaque:true};
+  }
+  const res=await fetch(GOOGLE_SHEET_API_URL,{
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({action,payload})
+  });
+  if(!res.ok)throw new Error(`Sheet update failed: ${res.status}`);
+  const text=await res.text();
+  let data={ok:true};
+  try{data=JSON.parse(text);}catch(err){}
+  if(data.ok===false)throw new Error(data.error||"Sheet update failed.");
+  return data;
+}
+
+async function saveToGoogleSheet(action,payload){
+  try{
+    await syncGoogleSheet(action,payload);
+    return true;
+  }catch(err){
+    console.error(err);
+    alert("Data changed locally, but Google Sheet was not updated. Please check the Apps Script deployment.");
+    return false;
+  }
+}
+
+function statusClass(s){const m={Published:"b-published",Accepted:"b-accepted",Revision:"b-revision","Under Review":"b-review",Submitted:"b-submitted",Draft:"b-draft"};return m[s]||"b-draft";}
+function quartileClass(q){if(q==="Q1")return"b-q1";if(q==="Q2")return"b-q2";if(q==="Q3")return"b-q3";if(q==="Q4")return"b-q4";if(q.startsWith("Sinta"))return"b-sinta";return"b-nonq";}
+
+function applyFilters(){
+  const q=document.getElementById("searchInput").value.toLowerCase();
+  const yr=getCheckedValues("filterYear").map(Number);
+  const st=getCheckedValues("filterStatus");
+  const tp=getCheckedValues("filterType");
+  const ix=getCheckedValues("filterIndex");
+  const au=getCheckedValues("filterAuthor");
+  const pj=getCheckedValues("filterProject");
+  filtered=pubs.filter(d=>{
+    if(q&&!d.t.toLowerCase().includes(q)&&!d.j.toLowerCase().includes(q))return false;
+    if(yr.length&&!yr.includes(d.y))return false;
+    if(st.length&&!st.includes(d.s))return false;
+    if(tp.length&&!tp.includes(d.type))return false;
+    if(ix.length&&!ix.includes(d.i))return false;
+    if(au.length&&!au.includes(d.a))return false;
+    if(pj.length&&!pj.includes(d.p))return false;
+    return true;
+  });
+  const isFiltered = filtered.length < pubs.length;
+  document.getElementById("yearFilterBadge").innerHTML = isFiltered ? `<span class="filter-active-badge">${filtered.length} shown</span>` : "";
+  document.getElementById("statusFilterBadge").innerHTML = "";
+  document.getElementById("quartileFilterBadge").innerHTML = "";
+  document.getElementById("typeFilterBadge").innerHTML = "";
+  page=1;
+  updateAllFilterButtons();
+  renderTable();
+  updateCharts(filtered);
+  updateMetrics(filtered);
+}
+
+function resetFilters(){
+  document.getElementById("searchInput").value="";
+  document.querySelectorAll(".multi-filter input").forEach(input=>input.checked=false);
+  filtered=[...pubs]; page=1;
+  updateAllFilterButtons();
+  renderTable(); updateCharts(pubs); updateMetrics(pubs);
+  ["yearFilterBadge","statusFilterBadge","quartileFilterBadge","typeFilterBadge"].forEach(id=>document.getElementById(id).innerHTML="");
+}
+
+function renderTable(){
+  const total=filtered.length, pages=Math.max(1,Math.ceil(total/perPage));
+  const start=(page-1)*perPage, slice=filtered.slice(start,start+perPage);
+  document.getElementById("countInfo").textContent=total+" publication"+(total!==1?"s":"");
+  document.getElementById("pageInfo").textContent="Page "+page+" / "+pages;
+  document.getElementById("prevBtn").disabled=page<=1;
+  document.getElementById("nextBtn").disabled=page>=pages;
+  document.getElementById("tableBody").innerHTML=slice.map((d,i)=>{
+    const publicationUrl=formatPublicationUrl(getPublicationUrl(d));
+    const actionCell = canEdit() ? `
+      <button class="act-btn" onclick="openEdit(${d.id})" title="Edit"><i class="ti ti-edit"></i></button>
+      <button class="act-btn del" onclick="deletePub(${d.id})" title="Delete"><i class="ti ti-trash"></i></button>
+    ` : '<span class="view-only-tag">view</span>';
+    return `
+    <tr>
+      <td style="color:var(--color-text-tertiary);font-size:11px">${start+i+1}</td>
+      <td><button type="button" class="title-link" title="View publication" onclick="openDetailPanel(${d.id})">${d.t}</button><br><span style="font-size:11px;color:var(--color-text-tertiary)">${d.j}</span>${publicationUrl?`<br><a class="pub-link" href="${publicationUrl}" target="_blank" rel="noopener">DOI / Link</a>`:""}</td>
+      <td style="white-space:nowrap">${d.y}</td>
+      <td><span class="badge ${quartileClass(d.q)}">${d.q}</span></td>
+      <td style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">${d.type}</td>
+      <td><span class="badge ${statusClass(d.s)}">${d.s}</span></td>
+      <td><span class="badge ${d.i==="Scopus"?"b-scopus":"b-nonscopus"}">${d.i}</span></td>
+      <td><span class="badge ${d.a==="First Author"?"b-first":"b-co"}">${d.a==="First Author"?"1st":"Co"}</span></td>
+      <td><span class="badge ${d.p==="PhD"?"b-phd":"b-co"}">${d.p}</span></td>
+      <td style="white-space:nowrap">${actionCell}</td>
+    </tr>`;
+  }).join("");
+}
+
+function changePage(dir){page+=dir;renderTable();}
+
+function updateMetrics(data){
+  const total=data.length, scopus=data.filter(d=>d.i==="Scopus").length;
+  const q1=data.filter(d=>d.q==="Q1").length;
+  const inProgress=data.filter(d=>["Revision","Under Review","Submitted","Draft","Accepted"].includes(d.s)).length;
+  const phd=data.filter(d=>d.p==="PhD").length;
+  const years=[...new Set(data.map(d=>d.y))].sort();
+
+  const summaryTotal = document.getElementById('summaryTotal');
+  const summaryScopus = document.getElementById('summaryScopus');
+  const summaryQ1 = document.getElementById('summaryQ1');
+  const summaryProgress = document.getElementById('summaryProgress');
+
+  if (summaryTotal) summaryTotal.textContent = total;
+  if (summaryScopus) summaryScopus.textContent = `${scopus}`;
+  if (summaryQ1) summaryQ1.textContent = `${q1}`;
+  if (summaryProgress) summaryProgress.textContent = `${inProgress}`;
+
+  document.getElementById("metrics").innerHTML=`
+    <div class="metric"><div class="metric-label">Total publications</div><div class="metric-value">${total}</div><div class="metric-sub">${years[0]||"—"} – ${years[years.length-1]||"—"}</div></div>
+    <div class="metric"><div class="metric-label">Scopus indexed</div><div class="metric-value">${scopus}</div><div class="metric-sub">${total?Math.round(scopus/total*100):0}% of shown</div></div>
+    <div class="metric"><div class="metric-label">Q1 journals</div><div class="metric-value">${q1}</div><div class="metric-sub">${total?Math.round(q1/total*100):0}% of shown</div></div>
+    <div class="metric"><div class="metric-label">PhD project</div><div class="metric-value">${phd}</div><div class="metric-sub">${inProgress} in progress</div></div>`;
+}
+
+const statusColors=["#639922","#1D9E75","#EF9F27","#378ADD","#7F77DD","#888780"];
+const qColors=["#534AB7","#185FA5","#3B6D11","#854F0B","#5F5E5A","#993556","#D85A30","#BA7517","#888780"];
+const typeColors=["#185FA5","#3B6D11","#854F0B"];
+
+function buildCharts(){
+  const years=[...new Set(pubs.map(d=>d.y))].sort();
+  charts.year = new Chart(document.getElementById("yearChart"),{
+    type:"bar",
+    data:{labels:years,datasets:[{label:"Publications",data:years.map(y=>pubs.filter(d=>d.y===y).length),backgroundColor:"#85B7EB",borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},maxRotation:45}},y:{ticks:{stepSize:1,font:{size:10}}}}}
+  });
+
+  const statuses=["Published","Accepted","Revision","Under Review","Submitted","Draft"];
+  const sLabels=statuses.filter(s=>pubs.some(d=>d.s===s));
+  document.getElementById("statusLegend").innerHTML=sLabels.map((s,i)=>`<span><span class="legend-dot" style="background:${statusColors[i]}"></span>${s} (${pubs.filter(d=>d.s===s).length})</span>`).join("");
+  charts.status = new Chart(document.getElementById("statusChart"),{
+    type:"doughnut",
+    data:{labels:sLabels,datasets:[{data:sLabels.map(s=>pubs.filter(d=>d.s===s).length),backgroundColor:sLabels.map((_,i)=>statusColors[i]),borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+
+  const qs=["Q1","Q2","Q3","Q4","Non Q","Sinta 2","Sinta 3","Sinta 4","Sinta 6"];
+  const qLabels=qs.filter(q=>pubs.some(d=>d.q===q));
+  document.getElementById("qLegend").innerHTML=qLabels.map((q,i)=>`<span><span class="legend-dot" style="background:${qColors[i]}"></span>${q} (${pubs.filter(d=>d.q===q).length})</span>`).join("");
+  charts.quartile = new Chart(document.getElementById("quartileChart"),{
+    type:"doughnut",
+    data:{labels:qLabels,datasets:[{data:qLabels.map(q=>pubs.filter(d=>d.q===q).length),backgroundColor:qLabels.map((_,i)=>qColors[i]),borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+
+  const types=["Journal","Conference","Book Chapter"];
+  document.getElementById("typeLegend").innerHTML=types.map((t,i)=>`<span><span class="legend-dot" style="background:${typeColors[i]}"></span>${t} (${pubs.filter(d=>d.type===t).length})</span>`).join("");
+  charts.type = new Chart(document.getElementById("typeChart"),{
+    type:"doughnut",
+    data:{labels:types,datasets:[{data:types.map(t=>pubs.filter(d=>d.type===t).length),backgroundColor:typeColors,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+}
+
+function updateCharts(data){
+  const years=[...new Set(data.map(d=>d.y))].sort();
+  charts.year.data.labels=years;
+  charts.year.data.datasets[0].data=years.map(y=>data.filter(d=>d.y===y).length);
+  charts.year.data.datasets[0].backgroundColor=years.map(y=>data.filter(d=>d.y===y).length>0?"#185FA5":"#D3D1C7");
+  charts.year.update();
+
+  const statuses=["Published","Accepted","Revision","Under Review","Submitted","Draft"];
+  const sLabels=statuses.filter(s=>data.some(d=>d.s===s));
+  charts.status.data.labels=sLabels;
+  charts.status.data.datasets[0].data=sLabels.map(s=>data.filter(d=>d.s===s).length);
+  charts.status.data.datasets[0].backgroundColor=sLabels.map((_,i)=>statusColors[i % statusColors.length]);
+  document.getElementById("statusLegend").innerHTML=sLabels.map((s,i)=>`<span><span class="legend-dot" style="background:${statusColors[i % statusColors.length]}"></span>${s} (${data.filter(d=>d.s===s).length})</span>`).join("");
+  charts.status.update();
+
+  const qs=["Q1","Q2","Q3","Q4","Non Q","Sinta 2","Sinta 3","Sinta 4","Sinta 6"];
+  const qLabels=qs.filter(q=>data.some(d=>d.q===q));
+  charts.quartile.data.labels=qLabels;
+  charts.quartile.data.datasets[0].data=qLabels.map(q=>data.filter(d=>d.q===q).length);
+  charts.quartile.data.datasets[0].backgroundColor=qLabels.map((_,i)=>qColors[i % qColors.length]);
+  document.getElementById("qLegend").innerHTML=qLabels.map((q,i)=>`<span><span class="legend-dot" style="background:${qColors[i % qColors.length]}"></span>${q} (${data.filter(d=>d.q===q).length})</span>`).join("");
+  charts.quartile.update();
+
+  const types=["Journal","Conference","Book Chapter"];
+  charts.type.data.labels=types;
+  charts.type.data.datasets[0].data=types.map(t=>data.filter(d=>d.type===t).length);
+  charts.type.data.datasets[0].backgroundColor=typeColors;
+  document.getElementById("typeLegend").innerHTML=types.map((t,i)=>`<span><span class="legend-dot" style="background:${typeColors[i]}"></span>${t} (${data.filter(d=>d.type===t).length})</span>`).join("");
+  charts.type.update();
+}
+
+function openAdd(){
+  if (!canEdit()) { openLoginModal(); return; }
+  editingId=null;
+  document.getElementById("modalTitle").textContent="Add publication";
+  document.getElementById("fTitle").value="";
+  document.getElementById("fJournal").value="";
+  document.getElementById("fPublisher").value="";
+  document.getElementById("fLink").value="";
+  document.getElementById("fYear").value=2026;
+  document.getElementById("fQuartile").value="Q1";
+  document.getElementById("fType").value="Journal";
+  document.getElementById("fStatus").value="Draft";
+  document.getElementById("fIndex").value="Scopus";
+  document.getElementById("fAuthor").value="First Author";
+  document.getElementById("fProject").value="PhD";
+  document.getElementById("modalBg").style.display="flex";
+}
+
+function openEdit(id){
+  if (!canEdit()) { openLoginModal(); return; }
+  const d=pubs.find(x=>x.id===id); if(!d)return;
+  editingId=id;
+  document.getElementById("modalTitle").textContent="Edit publication";
+  document.getElementById("fTitle").value=d.t;
+  document.getElementById("fJournal").value=d.j;
+  document.getElementById("fPublisher").value=d.publisher||"";
+  document.getElementById("fLink").value=getPublicationUrl(d);
+  document.getElementById("fYear").value=d.y;
+  document.getElementById("fQuartile").value=d.q;
+  document.getElementById("fType").value=d.type;
+  document.getElementById("fStatus").value=d.s;
+  document.getElementById("fIndex").value=d.i;
+  document.getElementById("fAuthor").value=d.a;
+  document.getElementById("fProject").value=d.p;
+  document.getElementById("modalBg").style.display="flex";
+}
+
+function closeModal(){document.getElementById("modalBg").style.display="none";}
+
+function openProgress(id){
+  openDetailPanel(id);
+  return;
+}
+
+function openProgressEditor(id){
+  const d=pubs.find(x=>x.id===id); if(!d)return;
+  if (!canEdit()) {
+    document.getElementById("progressTitle").value=d.t;
+    document.getElementById("progressJournal").value=d.j;
+    document.getElementById("progressLink").value=getPublicationUrl(d);
+    document.getElementById("progressStatus").value=d.s;
+    document.getElementById("progressQuartile").value=d.q;
+    document.getElementById("progressIndex").value=d.i;
+    document.getElementById("progressProject").value=d.p;
+    document.getElementById("progressTitle").readOnly = true;
+    document.getElementById("progressJournal").readOnly = true;
+    document.getElementById("progressLink").readOnly = true;
+    document.getElementById("progressStatus").disabled = true;
+    document.getElementById("progressQuartile").disabled = true;
+    document.getElementById("progressIndex").disabled = true;
+    document.getElementById("progressProject").disabled = true;
+    document.querySelector('#progressModalBg .btn-save').style.display = 'none';
+    document.querySelector('#progressModalBg .btn-delete').style.display = 'none';
+    document.getElementById("progressModalBg").style.display="flex";
+    return;
+  }
+  progressEditingId=id;
+  document.getElementById("progressTitle").value=d.t;
+  document.getElementById("progressJournal").value=d.j;
+  document.getElementById("progressLink").value=getPublicationUrl(d);
+  document.getElementById("progressStatus").value=d.s;
+  document.getElementById("progressQuartile").value=d.q;
+  document.getElementById("progressIndex").value=d.i;
+  document.getElementById("progressProject").value=d.p;
+  document.getElementById("progressModalBg").style.display="flex";
+}
+
+function closeProgressModal(){
+  progressEditingId=null;
+  document.getElementById("progressTitle").readOnly = false;
+  document.getElementById("progressJournal").readOnly = false;
+  document.getElementById("progressLink").readOnly = false;
+  document.getElementById("progressStatus").disabled = false;
+  document.getElementById("progressQuartile").disabled = false;
+  document.getElementById("progressIndex").disabled = false;
+  document.getElementById("progressProject").disabled = false;
+  const saveBtn = document.querySelector('#progressModalBg .btn-save');
+  const deleteBtn = document.querySelector('#progressModalBg .btn-delete');
+  if (saveBtn) saveBtn.style.display = 'inline-block';
+  if (deleteBtn) deleteBtn.style.display = 'inline-block';
+  document.getElementById("progressModalBg").style.display="none";
+}
+
+async function saveProgress(){
+  if(!canEdit()) { openLoginModal(); return; }
+  if(!progressEditingId)return;
+  const idx=pubs.findIndex(x=>x.id===progressEditingId);
+  if(idx===-1)return;
+  const title=document.getElementById("progressTitle").value.trim();
+  const journal=document.getElementById("progressJournal").value.trim();
+  if(!title||!journal){alert("Title and journal are required.");return;}
+  pubs[idx]={
+    ...pubs[idx],
+    t:title,
+    j:journal,
+    link:document.getElementById("progressLink").value.trim(),
+    s:document.getElementById("progressStatus").value,
+    q:document.getElementById("progressQuartile").value,
+    i:document.getElementById("progressIndex").value,
+    p:document.getElementById("progressProject").value,
+  };
+  await saveToGoogleSheet("update",pubs[idx]);
+  closeProgressModal();
+  applyFilters();
+}
+
+async function deleteProgressPublication(){
+  if(!canEdit()) { openLoginModal(); return; }
+  if(!progressEditingId)return;
+  const id=progressEditingId;
+  closeProgressModal();
+  await deletePub(id);
+}
+
+async function saveEntry(){
+  if (!canEdit()) { openLoginModal(); return; }
+  const t=document.getElementById("fTitle").value.trim();
+  const j=document.getElementById("fJournal").value.trim();
+  if(!t||!j){alert("Title and journal are required.");return;}
+  const entry={
+    t, j,
+    publisher:document.getElementById("fPublisher").value.trim(),
+    link:document.getElementById("fLink").value.trim(),
+    y:parseInt(document.getElementById("fYear").value),
+    q:document.getElementById("fQuartile").value,
+    type:document.getElementById("fType").value,
+    s:document.getElementById("fStatus").value,
+    i:document.getElementById("fIndex").value,
+    a:document.getElementById("fAuthor").value,
+    p:document.getElementById("fProject").value,
+  };
+  if(editingId){
+    const idx=pubs.findIndex(x=>x.id===editingId);
+    pubs[idx]={...pubs[idx],...entry};
+    await saveToGoogleSheet("update",pubs[idx]);
+  } else {
+    entry.id=nextId++;
+    pubs.push(entry);
+    renderFilterOptions("filterYear");
+    await saveToGoogleSheet("add",entry);
+  }
+  closeModal();
+  applyFilters();
+}
+
+async function deletePub(id){
+  if (!canEdit()) { openLoginModal(); return; }
+  if(!confirm("Delete this publication?"))return;
+  const removed=pubs.find(x=>x.id===id);
+  pubs=pubs.filter(x=>x.id!==id);
+  filtered=filtered.filter(x=>x.id!==id);
+  await saveToGoogleSheet("delete",removed||{id});
+  if(page>Math.ceil(filtered.length/perPage))page=Math.max(1,Math.ceil(filtered.length/perPage));
+  renderTable(); updateCharts(filtered); updateMetrics(filtered);
+}
+
+async function initDashboard(){
+  applyDarkModeFromStorage();
+  restoreAuthState();
+  initializeGoogleSignIn();
+  await loadGoogleSheetData();
+  renderAllFilterOptions();
+  buildCharts();
+  updateMetrics(pubs);
+  renderTable();
+}
+
+initDashboard();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(err => console.warn("Service worker registration failed.", err));
+  });
+}
+</script>
