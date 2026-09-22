@@ -1,7 +1,9 @@
-const CACHE_NAME = "publication-dashboard-v1";
+const CACHE_NAME = "publication-dashboard-viewer-v3";
 const APP_SHELL = [
   "/",
   "/index.html",
+  "/refinement.css",
+  "/data/publications.json",
   "/manifest.webmanifest",
   "/icons/icon-180.png",
   "/icons/icon-192.png",

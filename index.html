@@ -48,7 +48,7 @@ body.dark-mode .btn-add{box-shadow:0 12px 22px rgba(142,197,255,.22)}
 .metric::before{content:"";position:absolute;inset:0 auto auto 0;height:100%;width:6px;background:linear-gradient(180deg,#00b9a3,#1d4ed8,#3f4ef8)}
 .metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:7px;font-weight:700}
 .metric-value{font-size:30px;font-weight:800;color:var(--color-text-primary);letter-spacing:-.04em}
-.metric-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:4px}
+.metric-sub{font-size:13px;color:var(--color-text-tertiary);margin-top:4px}
 .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 auto 1.5rem;max-width:1500px}
 .chart-card{background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(250,252,255,.94));border:1px solid rgba(17,39,90,.08);border-radius:20px;padding:1rem 1.25rem;box-shadow:var(--shadow-soft)}
 .chart-card h3{font-size:12px;font-weight:800;color:var(--color-text-secondary);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}
@@ -135,7 +135,7 @@ tr:hover td{background:var(--color-background-secondary)}
 .filter-active-badge{display:inline-block;background:#E6F1FB;color:#185FA5;border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px}
 .login-box{display:flex;flex-direction:column;gap:12px;padding:10px 0}
 .login-box p{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
-.login-divider{display:flex;align-items:center;gap:12px;color:var(--color-text-tertiary);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.login-divider{display:flex;align-items:center;gap:12px;color:var(--color-text-tertiary);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
 .login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--color-border-tertiary)}
 .login-demo{display:flex;flex-direction:column;gap:8px}
 .login-demo input{padding:10px 12px;border:1px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary);color:var(--color-text-primary)}
@@ -169,13 +169,15 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
   .chart-card,.table-section,.metric{box-shadow:none;border:1px solid #d0d0d0;}
 }
 </style>
+<link rel="stylesheet" href="refinement.css">
 
 <div class="header">
   <div class="header-left">
-    <h1>Publication monitoring Andri</h1>
+    <div class="header-eyebrow">Andri · Research workspace</div>
+    <h1>Publication dashboard</h1>
     <div class="header-meta">
       <span class="meta-pill muted">2026 tracking</span>
-      <span class="meta-pill">Google Sheet ready</span>
+      <span class="meta-pill">Publication archive</span>
       <span class="meta-pill" id="accessBadge">Viewer mode</span>
     </div>
   </div>
@@ -184,15 +186,13 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
     <button class="btn-present" onclick="togglePresentationMode()" id="presentationToggle"><i class="ti ti-presentation"></i> Presentation</button>
     <button class="btn-export" onclick="exportCsv()"><i class="ti ti-file-export"></i> Export CSV</button>
     <button class="btn-export" onclick="exportPdf()"><i class="ti ti-file-text"></i> Export PDF</button>
-    <button class="btn-login" id="loginBtn" onclick="openLoginModal()"><i class="ti ti-user-circle"></i> Login</button>
-    <button class="btn-add" id="addBtn" onclick="openAdd()"><i class="ti ti-plus" aria-hidden="true"></i> Add publication</button>
   </div>
 </div>
 
 <div class="executive-summary">
   <div class="summary-head">
     <div class="summary-title">Executive summary</div>
-    <div class="summary-tag">Board-ready overview</div>
+    <div class="summary-tag">Current selection</div>
   </div>
   <div class="summary-grid">
     <div class="summary-kpi">
@@ -201,7 +201,7 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
       <div class="kpi-meta">total publications</div>
     </div>
     <div class="summary-kpi">
-      <div class="kpi-label">Scopus share</div>
+      <div class="kpi-label">Scopus indexed</div>
       <div class="kpi-value" id="summaryScopus">0</div>
       <div class="kpi-meta">indexed works</div>
     </div>
@@ -254,7 +254,7 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
     </div>
   </div>
   <div class="filter-row">
-    <input type="text" id="searchInput" placeholder="Search title or journal..." oninput="applyFilters()">
+    <input type="text" id="searchInput" aria-label="Search publications by title or journal" placeholder="Search title or journal..." oninput="applyFilters()">
     <div class="multi-filter" data-filter="year">
       <button type="button" class="multi-filter-btn" onclick="toggleFilterMenu(this)">All years <span>&#9662;</span></button>
       <div class="multi-filter-menu" id="filterYear"></div>
@@ -285,7 +285,7 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
       <thead>
         <tr>
           <th>#</th><th style="min-width:240px">Title / Journal</th><th>Year</th>
-          <th>Quartil</th><th>Type</th><th>Status</th><th>Index</th><th>Role</th><th>Project</th><th>Edit</th>
+          <th>Quartile</th><th>Type</th><th>Status</th><th>Index</th><th>Role</th><th>Project</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -298,22 +298,6 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
   </div>
 </div>
 
-<div id="loginModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeLoginModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h2>Editor access</h2>
-    <div class="login-box">
-      <p>Masuk dengan username dan password untuk mengakses fitur editor. Akun admin dapat menambah, mengubah, dan menghapus data. Akun lain akan terbatas sebagai viewer.</p>
-      <div class="login-demo">
-        <label for="loginUsername" style="font-size:12px;font-weight:600;color:var(--color-text-secondary)">Username</label>
-        <input id="loginUsername" type="text" placeholder="andrisjku">
-        <label for="loginPassword" style="font-size:12px;font-weight:600;color:var(--color-text-secondary)">Password</label>
-        <input id="loginPassword" type="password" placeholder="••••••••">
-        <button type="button" onclick="loginWithCredentials()">Continue as editor</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="detailPanel" class="detail-panel" style="display:none">
   <div class="detail-header">
     <h3>Publication detail</h3>
@@ -322,120 +306,6 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
   <div class="detail-body" id="detailBody"></div>
 </div>
 
-<div id="modalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h2 id="modalTitle">Add publication</h2>
-    <div class="form-grid">
-      <div class="form-group full">
-        <label>Title</label>
-        <textarea id="fTitle" rows="2"></textarea>
-      </div>
-      <div class="form-group full">
-        <label>Journal / Proceeding</label>
-        <input type="text" id="fJournal">
-      </div>
-      <div class="form-group full">
-        <label>Publisher</label>
-        <input type="text" id="fPublisher">
-      </div>
-      <div class="form-group full">
-        <label>DOI / Link</label>
-        <input type="url" id="fLink" placeholder="https://doi.org/... or publication URL">
-      </div>
-      <div class="form-group">
-        <label>Year</label>
-        <input type="number" id="fYear" min="2000" max="2030" value="2026">
-      </div>
-      <div class="form-group">
-        <label>Quartile</label>
-        <select id="fQuartile">
-          <option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option>
-          <option>Non Q</option><option>Sinta 1</option><option>Sinta 2</option>
-          <option>Sinta 3</option><option>Sinta 4</option><option>Sinta 5</option><option>Sinta 6</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Type</label>
-        <select id="fType">
-          <option>Journal</option><option>Conference</option><option>Book Chapter</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="fStatus">
-          <option>Draft</option><option>Submitted</option><option>Under Review</option>
-          <option>Revision</option><option>Accepted</option><option>Published</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Index</label>
-        <select id="fIndex"><option>Scopus</option><option>Non-Scopus</option></select>
-      </div>
-      <div class="form-group">
-        <label>Role</label>
-        <select id="fAuthor"><option>First Author</option><option>Co-Author</option></select>
-      </div>
-      <div class="form-group">
-        <label>Project</label>
-        <select id="fProject"><option>PhD</option><option>Non-PhD</option></select>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveEntry()">Save</button>
-    </div>
-  </div>
-</div>
-
-<div id="progressModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeProgressModal()">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h2>Edit publication</h2>
-    <div class="form-grid">
-      <div class="form-group full">
-        <label>Title</label>
-        <textarea id="progressTitle" rows="3"></textarea>
-      </div>
-      <div class="form-group full">
-        <label>Journal / Proceeding</label>
-        <input type="text" id="progressJournal">
-      </div>
-      <div class="form-group full">
-        <label>DOI / Link</label>
-        <input type="url" id="progressLink" placeholder="https://doi.org/... or publication URL">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="progressStatus">
-          <option>Draft</option><option>Submitted</option><option>Under Review</option>
-          <option>Revision</option><option>Accepted</option><option>Published</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Quartile</label>
-        <select id="progressQuartile">
-          <option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option>
-          <option>Non Q</option><option>Sinta 1</option><option>Sinta 2</option>
-          <option>Sinta 3</option><option>Sinta 4</option><option>Sinta 5</option><option>Sinta 6</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Index</label>
-        <select id="progressIndex"><option>Scopus</option><option>Non-Scopus</option></select>
-      </div>
-      <div class="form-group">
-        <label>Project</label>
-        <select id="progressProject"><option>PhD</option><option>Non-PhD</option></select>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-delete" onclick="deleteProgressPublication()">Delete</button>
-      <button class="btn-cancel" onclick="closeProgressModal()">Cancel</button>
-      <button class="btn-save" onclick="saveProgress()">Save changes</button>
-    </div>
-  </div>
-</div>
-
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
 <script>
@@ -533,47 +403,11 @@ let pubs = [
 let nextId = 89;
 let filtered = [...pubs], page = 1;
 const perPage = 15;
-let editingId = null;
-let progressEditingId = null;
 let charts = {};
-let isAdmin = false;
-let currentUser = null;
 let presentationMode = false;
 
-const runtimeConfig = {
-  googleClientId: (window.GOOGLE_CLIENT_ID && String(window.GOOGLE_CLIENT_ID).trim()) || "",
-  adminEmails: Array.from(new Set([
-    ...(Array.isArray(window.ADMIN_EMAILS) ? window.ADMIN_EMAILS : []),
-    "andri.setiyawan@gmail.com",
-    "admin@andri.dev"
-  ])).filter(Boolean).map(email => String(email).trim().toLowerCase())
-};
-const GOOGLE_CLIENT_ID = runtimeConfig.googleClientId;
-const ADMIN_EMAILS = runtimeConfig.adminEmails;
-const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1c6RE5vazqU8uu8TXdrAv28bg8VAWGei5cdIDHCIaqnA/export?format=csv&gid=0";
-const GOOGLE_SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyamJFkaKZxTqGaFR1OZdG7XUvzbQauEc1jFRoExt0oZ7J0o-glnLt0C8A71WwDjgdjQQ/exec";
+const DATASET_URL = "./data/publications.json";
 const fallbackPubs = pubs.map(d=>({...d}));
-
-function canEdit(){return isAdmin;}
-
-function getStoredAuth(){
-  try{ return JSON.parse(localStorage.getItem('publication-dashboard-auth') || 'null') || {email:'',admin:false}; }
-  catch{ return {email:'',admin:false}; }
-}
-
-function persistAuth(auth){ localStorage.setItem('publication-dashboard-auth', JSON.stringify(auth)); }
-
-function setAccessState(user, admin){
-  currentUser = user || null;
-  isAdmin = !!admin;
-  const badge = document.getElementById('accessBadge');
-  const loginBtn = document.getElementById('loginBtn');
-  const addBtn = document.getElementById('addBtn');
-  if (badge) badge.textContent = isAdmin ? 'Admin editor' : (currentUser ? 'Viewer access' : 'Viewer mode');
-  if (loginBtn) loginBtn.innerHTML = isAdmin ? '<i class="ti ti-shield-check"></i> Admin logged in' : '<i class="ti ti-user-circle"></i> Login';
-  if (addBtn) addBtn.style.display = isAdmin ? 'inline-flex' : 'none';
-  renderTable();
-}
 
 function toggleDarkMode(){
   document.body.classList.toggle('dark-mode');
@@ -588,115 +422,6 @@ function applySavedTheme(){
   if (savedTheme === 'dark') document.body.classList.add('dark-mode');
   const toggle = document.getElementById('themeToggle');
   if (toggle) toggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="ti ti-sun"></i> Light mode' : '<i class="ti ti-moon"></i> Dark mode';
-}
-
-function decodeJwt(jwt){
-  try{
-    const payload = jwt.split('.')[1];
-    const normalized = payload.replace(/-/g,'+').replace(/_/g,'/');
-    const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
-    const decoded = atob(padded);
-    return JSON.parse(decodeURIComponent(Array.from(decoded).map(char => '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)).join('')));
-  } catch {
-    return {};
-  }
-}
-
-function handleGoogleCredential(response){
-  const payload = decodeJwt(response.credential || '');
-  const email = String(payload.email || '').toLowerCase();
-  const admin = ADMIN_EMAILS.includes(email);
-  currentUser = {email, name: payload.name || email};
-  isAdmin = admin;
-  persistAuth({email, admin, username: currentUser.name});
-  setAccessState(currentUser, admin);
-  closeLoginModal();
-  if (!admin) alert('Login berhasil sebagai viewer. Editing dibatasi hanya untuk admin.');
-}
-
-function initializeGoogleSignIn(){
-  const notice = document.getElementById('googleOAuthNotice');
-  const signInButton = document.getElementById('googleSignInButton');
-
-  if (!GOOGLE_CLIENT_ID) {
-    if (notice) {
-      notice.style.display = 'block';
-      notice.textContent = 'Google OAuth Client ID belum dikonfigurasi. Set window.GOOGLE_CLIENT_ID atau replace constant di file ini untuk login sesungguhnya.';
-    }
-    if (signInButton) {
-      signInButton.innerHTML = '<div style="font-size:12px;color:var(--color-text-secondary);line-height:1.5;padding:8px 0;">Production OAuth belum aktif. Tambahkan Client ID Google untuk mengaktifkan login nyata.</div>';
-    }
-    return;
-  }
-
-  if (!window.google || !window.google.accounts) {
-    if (notice) {
-      notice.style.display = 'block';
-      notice.textContent = 'Google Identity Services belum siap. Pastikan script gsi/client sudah dimuat sebelum render login.';
-    }
-    return;
-  }
-
-  window.google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleCredential,
-    auto_select: false,
-    cancel_on_tap_outside: false
-  });
-
-  if (signInButton) {
-    signInButton.innerHTML = '';
-    window.google.accounts.id.renderButton(signInButton, {
-      theme: 'outline',
-      size: 'large',
-      width: 280,
-      text: 'continue_with',
-      locale: 'en'
-    });
-  }
-
-  if (notice) {
-    notice.style.display = 'none';
-    notice.textContent = '';
-  }
-}
-
-function openLoginModal(){ document.getElementById('loginModalBg').style.display = 'flex'; }
-function closeLoginModal(){ document.getElementById('loginModalBg').style.display = 'none'; }
-
-function loginWithCredentials(){
-  const usernameInput = document.getElementById('loginUsername');
-  const passwordInput = document.getElementById('loginPassword');
-  const username = String(usernameInput.value || '').trim();
-  const password = String(passwordInput.value || '');
-
-  if (!username || !password) {
-    alert('Username dan password harus diisi.');
-    return;
-  }
-
-  const admin = username === 'andrisjku' && password === 'Linz2024@@';
-  currentUser = {email: username, name: username};
-  isAdmin = admin;
-  persistAuth({email: username, admin, username});
-  setAccessState(currentUser, admin);
-  closeLoginModal();
-
-  if (admin) {
-    alert('Login berhasil sebagai admin editor.');
-  } else {
-    alert('Username atau password salah. Akses terbatas sebagai viewer.');
-  }
-}
-
-function restoreAuthState(){
-  const stored = getStoredAuth();
-  const username = String(stored && (stored.username || stored.email) || '').trim();
-  if (username) {
-    currentUser = {email: username, name: username};
-    isAdmin = !!stored.admin;
-  }
-  setAccessState(currentUser, isAdmin);
 }
 
 function exportCsv(){
@@ -716,9 +441,9 @@ function exportCsv(){
       index: row.i || '',
       role: row.a || '',
       project: row.p || ''
-    }[header] || '');
+    }[header] || '';
     return '"' + String(value).replace(/"/g, '""') + '"';
-  }).join(',')).join('\n'));
+  }).join(','))).join('\n');
   const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -790,7 +515,6 @@ function openDetailPanel(id){
     </div>
     <div class="detail-actions">
       ${item.link ? `<a class="detail-link" href="${formatPublicationUrl(item.link)}" target="_blank" rel="noopener">Open publication</a>` : ''}
-      <button class="detail-close" onclick="openEdit(${item.id})">Edit</button>
     </div>
   `;
   document.getElementById('detailPanel').style.display = 'flex';
@@ -911,57 +635,58 @@ function mapSheetRows(rows){
   })).filter(d=>d.t&&d.j);
 }
 
-async function loadGoogleSheetData(){
-  try{
-    const res=await fetch(`${GOOGLE_SHEET_CSV_URL}&t=${Date.now()}`);
-    if(!res.ok)throw new Error(`Sheet request failed: ${res.status}`);
-    const rows=parseCsv(await res.text());
-    const sheetPubs=mapSheetRows(rows);
-    if(sheetPubs.length){
-      pubs=sheetPubs;
-      nextId=Math.max(...pubs.map(d=>d.id))+1;
-    }
-  }catch(err){
-    console.warn("Using embedded publication data because Google Sheet could not be loaded.",err);
-    pubs=fallbackPubs.map(d=>({...d,p:normalizeProject(d.p)}));
-    nextId=Math.max(...pubs.map(d=>d.id))+1;
-  }
-  filtered=[...pubs];
-}
+async function loadPublicationData(){
+  const sourceAttempts = [];
 
-async function syncGoogleSheet(action,payload){
-  if(!GOOGLE_SHEET_API_URL)return false;
-  if(GOOGLE_SHEET_API_URL.includes("script.google.com")){
-    await fetch(GOOGLE_SHEET_API_URL,{
-      method:"POST",
-      mode:"no-cors",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({action,payload})
-    });
-    return {ok:true,opaque:true};
-  }
-  const res=await fetch(GOOGLE_SHEET_API_URL,{
-    method:"POST",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify({action,payload})
+  sourceAttempts.push(async () => {
+    const res = await fetch(`${DATASET_URL}?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`Dataset request failed: ${res.status}`);
+    const data = await res.json();
+    const records = Array.isArray(data) ? data : (Array.isArray(data.publications) ? data.publications : []);
+    if (!records.length) throw new Error("Local dataset is empty");
+    return records;
   });
-  if(!res.ok)throw new Error(`Sheet update failed: ${res.status}`);
-  const text=await res.text();
-  let data={ok:true};
-  try{data=JSON.parse(text);}catch(err){}
-  if(data.ok===false)throw new Error(data.error||"Sheet update failed.");
-  return data;
-}
 
-async function saveToGoogleSheet(action,payload){
-  try{
-    await syncGoogleSheet(action,payload);
-    return true;
-  }catch(err){
-    console.error(err);
-    alert("Data changed locally, but Google Sheet was not updated. Please check the Apps Script deployment.");
-    return false;
+  let loaded = false;
+
+  for (const sourceAttempt of sourceAttempts) {
+    try {
+      const localPubs = await sourceAttempt();
+      pubs = localPubs.map((d, index) => ({
+        id: Number(d.id ?? index + 1),
+        a: d.a || d.author || "First Author",
+        t: d.t || d.title || "",
+        j: d.j || d.journal || "",
+        publisher: d.publisher || "",
+        link: d.link || d.doi || "",
+        y: Number(d.y || d.year || new Date().getFullYear()),
+        q: d.q || d.quartile || "Non Q",
+        type: d.type || "Journal",
+        s: d.s || d.status || "Draft",
+        i: d.i || d.index || "Non-Scopus",
+        p: normalizeProject(d.p || d.project || "Non-PhD")
+      })).filter(d => d.t && d.j);
+
+      if (pubs.length) {
+        nextId = Math.max(...pubs.map(d => d.id), 0) + 1;
+        filtered = [...pubs];
+        loaded = true;
+        break;
+      }
+
+      throw new Error("Resolved data source had no valid publication rows");
+    } catch (err) {
+      console.warn("Data source failed, trying fallback source.", err);
+    }
   }
+
+  if (!loaded) {
+    console.warn("Using embedded publication data because all configured sources failed.");
+    pubs = fallbackPubs.map(d => ({ ...d, p: normalizeProject(d.p) }));
+    nextId = Math.max(...pubs.map(d => d.id), 0) + 1;
+  }
+
+  filtered = [...pubs];
 }
 
 function statusClass(s){const m={Published:"b-published",Accepted:"b-accepted",Revision:"b-revision","Under Review":"b-review",Submitted:"b-submitted",Draft:"b-draft"};return m[s]||"b-draft";}
@@ -1007,6 +732,7 @@ function resetFilters(){
 }
 
 function renderTable(){
+  filtered.sort((a,b)=>Number(b.y)-Number(a.y));
   const total=filtered.length, pages=Math.max(1,Math.ceil(total/perPage));
   const start=(page-1)*perPage, slice=filtered.slice(start,start+perPage);
   document.getElementById("countInfo").textContent=total+" publication"+(total!==1?"s":"");
@@ -1015,24 +741,19 @@ function renderTable(){
   document.getElementById("nextBtn").disabled=page>=pages;
   document.getElementById("tableBody").innerHTML=slice.map((d,i)=>{
     const publicationUrl=formatPublicationUrl(getPublicationUrl(d));
-    const actionCell = canEdit() ? `
-      <button class="act-btn" onclick="openEdit(${d.id})" title="Edit"><i class="ti ti-edit"></i></button>
-      <button class="act-btn del" onclick="deletePub(${d.id})" title="Delete"><i class="ti ti-trash"></i></button>
-    ` : '<span class="view-only-tag">view</span>';
     return `
     <tr>
-      <td style="color:var(--color-text-tertiary);font-size:11px">${start+i+1}</td>
-      <td><button type="button" class="title-link" title="View publication" onclick="openDetailPanel(${d.id})">${d.t}</button><br><span style="font-size:11px;color:var(--color-text-tertiary)">${d.j}</span>${publicationUrl?`<br><a class="pub-link" href="${publicationUrl}" target="_blank" rel="noopener">DOI / Link</a>`:""}</td>
+      <td style="color:var(--color-text-tertiary);font-size:13px">${start+i+1}</td>
+      <td><button type="button" class="title-link" title="View publication" onclick="openDetailPanel(${d.id})">${d.t}</button><br><span style="font-size:13px;color:var(--color-text-tertiary)">${d.j}</span>${publicationUrl?`<br><a class="pub-link" href="${publicationUrl}" target="_blank" rel="noopener">DOI / Link</a>`:""}</td>
       <td style="white-space:nowrap">${d.y}</td>
       <td><span class="badge ${quartileClass(d.q)}">${d.q}</span></td>
-      <td style="font-size:11px;color:var(--color-text-secondary);white-space:nowrap">${d.type}</td>
+      <td style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap">${d.type}</td>
       <td><span class="badge ${statusClass(d.s)}">${d.s}</span></td>
       <td><span class="badge ${d.i==="Scopus"?"b-scopus":"b-nonscopus"}">${d.i}</span></td>
       <td><span class="badge ${d.a==="First Author"?"b-first":"b-co"}">${d.a==="First Author"?"1st":"Co"}</span></td>
       <td><span class="badge ${d.p==="PhD"?"b-phd":"b-co"}">${d.p}</span></td>
-      <td style="white-space:nowrap">${actionCell}</td>
     </tr>`;
-  }).join("");
+  }).join("") || '<tr><td colspan="9" class="empty-state"><strong>No publications found</strong>Try another keyword or reset the filters.</td></tr>';
 }
 
 function changePage(dir){page+=dir;renderTable();}
@@ -1054,11 +775,13 @@ function updateMetrics(data){
   if (summaryQ1) summaryQ1.textContent = `${q1}`;
   if (summaryProgress) summaryProgress.textContent = `${inProgress}`;
 
+  const published=data.filter(d=>d.s==="Published").length;
+  const firstAuthor=data.filter(d=>d.a==="First Author").length;
   document.getElementById("metrics").innerHTML=`
-    <div class="metric"><div class="metric-label">Total publications</div><div class="metric-value">${total}</div><div class="metric-sub">${years[0]||"—"} – ${years[years.length-1]||"—"}</div></div>
-    <div class="metric"><div class="metric-label">Scopus indexed</div><div class="metric-value">${scopus}</div><div class="metric-sub">${total?Math.round(scopus/total*100):0}% of shown</div></div>
-    <div class="metric"><div class="metric-label">Q1 journals</div><div class="metric-value">${q1}</div><div class="metric-sub">${total?Math.round(q1/total*100):0}% of shown</div></div>
-    <div class="metric"><div class="metric-label">PhD project</div><div class="metric-value">${phd}</div><div class="metric-sub">${inProgress} in progress</div></div>`;
+    <div class="metric"><div class="metric-label">Published</div><div class="metric-value">${published}</div><div class="metric-sub">${total?Math.round(published/total*100):0}% of current selection</div></div>
+    <div class="metric"><div class="metric-label">First author</div><div class="metric-value">${firstAuthor}</div><div class="metric-sub">Authorship contributions</div></div>
+    <div class="metric"><div class="metric-label">PhD project</div><div class="metric-value">${phd}</div><div class="metric-sub">Publications linked to PhD</div></div>
+    <div class="metric"><div class="metric-label">Publication years</div><div class="metric-value">${years.length}</div><div class="metric-sub">${years[0]||"—"} – ${years[years.length-1]||"—"}</div></div>`;
 }
 
 const statusColors=["#639922","#1D9E75","#EF9F27","#378ADD","#7F77DD","#888780"];
@@ -1070,7 +793,7 @@ function buildCharts(){
   charts.year = new Chart(document.getElementById("yearChart"),{
     type:"bar",
     data:{labels:years,datasets:[{label:"Publications",data:years.map(y=>pubs.filter(d=>d.y===y).length),backgroundColor:"#85B7EB",borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},maxRotation:45}},y:{ticks:{stepSize:1,font:{size:10}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:12},maxRotation:45}},y:{ticks:{stepSize:1,font:{size:12}}}}}
   });
 
   const statuses=["Published","Accepted","Revision","Under Review","Submitted","Draft"];
@@ -1131,177 +854,10 @@ function updateCharts(data){
   charts.type.update();
 }
 
-function openAdd(){
-  if (!canEdit()) { openLoginModal(); return; }
-  editingId=null;
-  document.getElementById("modalTitle").textContent="Add publication";
-  document.getElementById("fTitle").value="";
-  document.getElementById("fJournal").value="";
-  document.getElementById("fPublisher").value="";
-  document.getElementById("fLink").value="";
-  document.getElementById("fYear").value=2026;
-  document.getElementById("fQuartile").value="Q1";
-  document.getElementById("fType").value="Journal";
-  document.getElementById("fStatus").value="Draft";
-  document.getElementById("fIndex").value="Scopus";
-  document.getElementById("fAuthor").value="First Author";
-  document.getElementById("fProject").value="PhD";
-  document.getElementById("modalBg").style.display="flex";
-}
-
-function openEdit(id){
-  if (!canEdit()) { openLoginModal(); return; }
-  const d=pubs.find(x=>x.id===id); if(!d)return;
-  editingId=id;
-  document.getElementById("modalTitle").textContent="Edit publication";
-  document.getElementById("fTitle").value=d.t;
-  document.getElementById("fJournal").value=d.j;
-  document.getElementById("fPublisher").value=d.publisher||"";
-  document.getElementById("fLink").value=getPublicationUrl(d);
-  document.getElementById("fYear").value=d.y;
-  document.getElementById("fQuartile").value=d.q;
-  document.getElementById("fType").value=d.type;
-  document.getElementById("fStatus").value=d.s;
-  document.getElementById("fIndex").value=d.i;
-  document.getElementById("fAuthor").value=d.a;
-  document.getElementById("fProject").value=d.p;
-  document.getElementById("modalBg").style.display="flex";
-}
-
-function closeModal(){document.getElementById("modalBg").style.display="none";}
-
-function openProgress(id){
-  openDetailPanel(id);
-  return;
-}
-
-function openProgressEditor(id){
-  const d=pubs.find(x=>x.id===id); if(!d)return;
-  if (!canEdit()) {
-    document.getElementById("progressTitle").value=d.t;
-    document.getElementById("progressJournal").value=d.j;
-    document.getElementById("progressLink").value=getPublicationUrl(d);
-    document.getElementById("progressStatus").value=d.s;
-    document.getElementById("progressQuartile").value=d.q;
-    document.getElementById("progressIndex").value=d.i;
-    document.getElementById("progressProject").value=d.p;
-    document.getElementById("progressTitle").readOnly = true;
-    document.getElementById("progressJournal").readOnly = true;
-    document.getElementById("progressLink").readOnly = true;
-    document.getElementById("progressStatus").disabled = true;
-    document.getElementById("progressQuartile").disabled = true;
-    document.getElementById("progressIndex").disabled = true;
-    document.getElementById("progressProject").disabled = true;
-    document.querySelector('#progressModalBg .btn-save').style.display = 'none';
-    document.querySelector('#progressModalBg .btn-delete').style.display = 'none';
-    document.getElementById("progressModalBg").style.display="flex";
-    return;
-  }
-  progressEditingId=id;
-  document.getElementById("progressTitle").value=d.t;
-  document.getElementById("progressJournal").value=d.j;
-  document.getElementById("progressLink").value=getPublicationUrl(d);
-  document.getElementById("progressStatus").value=d.s;
-  document.getElementById("progressQuartile").value=d.q;
-  document.getElementById("progressIndex").value=d.i;
-  document.getElementById("progressProject").value=d.p;
-  document.getElementById("progressModalBg").style.display="flex";
-}
-
-function closeProgressModal(){
-  progressEditingId=null;
-  document.getElementById("progressTitle").readOnly = false;
-  document.getElementById("progressJournal").readOnly = false;
-  document.getElementById("progressLink").readOnly = false;
-  document.getElementById("progressStatus").disabled = false;
-  document.getElementById("progressQuartile").disabled = false;
-  document.getElementById("progressIndex").disabled = false;
-  document.getElementById("progressProject").disabled = false;
-  const saveBtn = document.querySelector('#progressModalBg .btn-save');
-  const deleteBtn = document.querySelector('#progressModalBg .btn-delete');
-  if (saveBtn) saveBtn.style.display = 'inline-block';
-  if (deleteBtn) deleteBtn.style.display = 'inline-block';
-  document.getElementById("progressModalBg").style.display="none";
-}
-
-async function saveProgress(){
-  if(!canEdit()) { openLoginModal(); return; }
-  if(!progressEditingId)return;
-  const idx=pubs.findIndex(x=>x.id===progressEditingId);
-  if(idx===-1)return;
-  const title=document.getElementById("progressTitle").value.trim();
-  const journal=document.getElementById("progressJournal").value.trim();
-  if(!title||!journal){alert("Title and journal are required.");return;}
-  pubs[idx]={
-    ...pubs[idx],
-    t:title,
-    j:journal,
-    link:document.getElementById("progressLink").value.trim(),
-    s:document.getElementById("progressStatus").value,
-    q:document.getElementById("progressQuartile").value,
-    i:document.getElementById("progressIndex").value,
-    p:document.getElementById("progressProject").value,
-  };
-  await saveToGoogleSheet("update",pubs[idx]);
-  closeProgressModal();
-  applyFilters();
-}
-
-async function deleteProgressPublication(){
-  if(!canEdit()) { openLoginModal(); return; }
-  if(!progressEditingId)return;
-  const id=progressEditingId;
-  closeProgressModal();
-  await deletePub(id);
-}
-
-async function saveEntry(){
-  if (!canEdit()) { openLoginModal(); return; }
-  const t=document.getElementById("fTitle").value.trim();
-  const j=document.getElementById("fJournal").value.trim();
-  if(!t||!j){alert("Title and journal are required.");return;}
-  const entry={
-    t, j,
-    publisher:document.getElementById("fPublisher").value.trim(),
-    link:document.getElementById("fLink").value.trim(),
-    y:parseInt(document.getElementById("fYear").value),
-    q:document.getElementById("fQuartile").value,
-    type:document.getElementById("fType").value,
-    s:document.getElementById("fStatus").value,
-    i:document.getElementById("fIndex").value,
-    a:document.getElementById("fAuthor").value,
-    p:document.getElementById("fProject").value,
-  };
-  if(editingId){
-    const idx=pubs.findIndex(x=>x.id===editingId);
-    pubs[idx]={...pubs[idx],...entry};
-    await saveToGoogleSheet("update",pubs[idx]);
-  } else {
-    entry.id=nextId++;
-    pubs.push(entry);
-    renderFilterOptions("filterYear");
-    await saveToGoogleSheet("add",entry);
-  }
-  closeModal();
-  applyFilters();
-}
-
-async function deletePub(id){
-  if (!canEdit()) { openLoginModal(); return; }
-  if(!confirm("Delete this publication?"))return;
-  const removed=pubs.find(x=>x.id===id);
-  pubs=pubs.filter(x=>x.id!==id);
-  filtered=filtered.filter(x=>x.id!==id);
-  await saveToGoogleSheet("delete",removed||{id});
-  if(page>Math.ceil(filtered.length/perPage))page=Math.max(1,Math.ceil(filtered.length/perPage));
-  renderTable(); updateCharts(filtered); updateMetrics(filtered);
-}
-
 async function initDashboard(){
   applyDarkModeFromStorage();
-  restoreAuthState();
-  initializeGoogleSignIn();
-  await loadGoogleSheetData();
+  localStorage.removeItem("publication-dashboard-auth");
+  await loadPublicationData();
   renderAllFilterOptions();
   buildCharts();
   updateMetrics(pubs);

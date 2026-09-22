@@ -19,6 +19,10 @@ PWA dashboard for monitoring publications. Deploy this folder to Netlify from a 
 2. Tap Share.
 3. Choose **Add to Home Screen**.
 
-## Google Sheet
+## Viewer deployment
 
-The dashboard reads from Google Sheet CSV and writes through the Apps Script Web App URL configured in `index.html`.
+This release is a read-only publication dashboard. Login, editor actions, stored admin sessions, and Google Apps Script write integration are removed.
+
+Publication data is loaded from `data/publications.json`. Update that file and push to GitHub to publish data changes through Netlify. Embedded data is used if the dataset cannot be loaded.
+
+Netlify settings: production branch `main`, no build command, publish directory `.`.
