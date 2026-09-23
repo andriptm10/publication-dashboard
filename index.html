@@ -186,6 +186,8 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
     <button class="btn-present" onclick="togglePresentationMode()" id="presentationToggle"><i class="ti ti-presentation"></i> Presentation</button>
     <button class="btn-export" onclick="exportCsv()"><i class="ti ti-file-export"></i> Export CSV</button>
     <button class="btn-export" onclick="exportPdf()"><i class="ti ti-file-text"></i> Export PDF</button>
+    <button class="btn-login" id="loginBtn" onclick="toggleLogin()"><i class="ti ti-login"></i> Login</button>
+    <button class="btn-add" id="addBtn" onclick="openAdd()" hidden><i class="ti ti-plus"></i> Add publication</button>
   </div>
 </div>
 
@@ -285,7 +287,7 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
       <thead>
         <tr>
           <th>#</th><th style="min-width:240px">Title / Journal</th><th>Year</th>
-          <th>Quartile</th><th>Type</th><th>Status</th><th>Index</th><th>Role</th><th>Project</th>
+          <th>Quartile</th><th>Type</th><th>Status</th><th>Index</th><th>Role</th><th>Project</th><th id="actionHeader" hidden>Actions</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -295,6 +297,48 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
     <button id="prevBtn" onclick="changePage(-1)"><i class="ti ti-chevron-left"></i></button>
     <span id="pageInfo"></span>
     <button id="nextBtn" onclick="changePage(1)"><i class="ti ti-chevron-right"></i></button>
+  </div>
+</div>
+
+<div id="loginModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeLoginModal()">
+  <div class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" onclick="event.stopPropagation()">
+    <h2 id="loginTitle">Editor login</h2>
+    <div class="login-box">
+      <p>Masuk untuk menambah, mengubah, atau menghapus publikasi pada browser ini.</p>
+      <div class="login-demo">
+        <label for="loginUsername">Username</label>
+        <input id="loginUsername" type="text" autocomplete="username">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginWithCredentials()">
+        <div id="loginError" class="form-error" role="alert"></div>
+        <button type="button" onclick="loginWithCredentials()">Login as editor</button>
+      </div>
+      <button class="btn-cancel" type="button" onclick="closeLoginModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="editModalBg" style="display:none" class="modal-bg" onclick="if(event.target===this)closeEditModal()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle" onclick="event.stopPropagation()">
+    <h2 id="editModalTitle">Edit publication</h2>
+    <div class="form-grid">
+      <div class="form-group full"><label for="fTitle">Title</label><textarea id="fTitle" required></textarea></div>
+      <div class="form-group"><label for="fJournal">Journal / venue</label><input id="fJournal" required></div>
+      <div class="form-group"><label for="fPublisher">Publisher</label><input id="fPublisher"></div>
+      <div class="form-group full"><label for="fLink">DOI or URL</label><input id="fLink" type="url" placeholder="https://..."></div>
+      <div class="form-group"><label for="fYear">Year</label><input id="fYear" type="number" min="1900" max="2100" required></div>
+      <div class="form-group"><label for="fQuartile">Quartile</label><select id="fQuartile"><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option><option>Non Q</option><option>Sinta 2</option><option>Sinta 3</option><option>Sinta 4</option><option>Sinta 6</option></select></div>
+      <div class="form-group"><label for="fType">Type</label><select id="fType"><option>Journal</option><option>Conference</option><option>Book Chapter</option></select></div>
+      <div class="form-group"><label for="fStatus">Status</label><select id="fStatus"><option>Published</option><option>Accepted</option><option>Revision</option><option>Under Review</option><option>Submitted</option><option>Draft</option></select></div>
+      <div class="form-group"><label for="fIndex">Index</label><select id="fIndex"><option>Scopus</option><option>Non-Scopus</option></select></div>
+      <div class="form-group"><label for="fAuthor">Role</label><select id="fAuthor"><option>First Author</option><option>Co-Author</option></select></div>
+      <div class="form-group"><label for="fProject">Project</label><select id="fProject"><option>PhD</option><option>Non-PhD</option></select></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-delete" id="deleteEntryBtn" type="button" onclick="deleteEntry()">Delete</button>
+      <button class="btn-cancel" type="button" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-save" type="button" onclick="saveEntry()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -405,9 +449,114 @@ let filtered = [...pubs], page = 1;
 const perPage = 15;
 let charts = {};
 let presentationMode = false;
+let isAdmin = false;
+let editingId = null;
 
 const DATASET_URL = "./data/publications.json";
+const EDITOR_USERNAME = "andrisjku";
+const EDITOR_PASSWORD_HASH = "2fe37ad19d349defcb3a6579f60316e44a55281f1b8d063950e05795b4507c36";
+const EDITOR_DATA_KEY = "publication-dashboard-editor-data-v1";
+const EDITOR_SESSION_KEY = "publication-dashboard-editor-session";
 const fallbackPubs = pubs.map(d=>({...d}));
+
+async function sha256(value){
+  const bytes = new TextEncoder().encode(value);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,"0")).join("");
+}
+
+function toggleLogin(){
+  if(isAdmin){
+    isAdmin=false;
+    sessionStorage.removeItem(EDITOR_SESSION_KEY);
+    updateEditorState();
+    return;
+  }
+  document.getElementById("loginError").textContent="";
+  document.getElementById("loginModalBg").style.display="flex";
+  setTimeout(()=>document.getElementById("loginUsername").focus(),0);
+}
+
+function closeLoginModal(){document.getElementById("loginModalBg").style.display="none";}
+
+async function loginWithCredentials(){
+  const username=document.getElementById("loginUsername").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  const valid=username===EDITOR_USERNAME && await sha256(password)===EDITOR_PASSWORD_HASH;
+  if(!valid){
+    document.getElementById("loginError").textContent="Username atau password salah.";
+    return;
+  }
+  isAdmin=true;
+  sessionStorage.setItem(EDITOR_SESSION_KEY,"active");
+  document.getElementById("loginPassword").value="";
+  closeLoginModal();
+  updateEditorState();
+}
+
+function updateEditorState(){
+  const badge=document.getElementById("accessBadge");
+  const loginBtn=document.getElementById("loginBtn");
+  badge.textContent=isAdmin?"Editor mode":"Viewer mode";
+  loginBtn.innerHTML=isAdmin?'<i class="ti ti-logout"></i> Logout':'<i class="ti ti-login"></i> Login';
+  document.getElementById("addBtn").hidden=!isAdmin;
+  document.getElementById("actionHeader").hidden=!isAdmin;
+  renderTable();
+}
+
+function persistEditorData(){
+  localStorage.setItem(EDITOR_DATA_KEY,JSON.stringify(pubs));
+}
+
+function openAdd(){
+  if(!isAdmin)return toggleLogin();
+  editingId=null;
+  document.getElementById("editModalTitle").textContent="Add publication";
+  document.getElementById("deleteEntryBtn").hidden=true;
+  const defaults={fTitle:"",fJournal:"",fPublisher:"",fLink:"",fYear:new Date().getFullYear(),fQuartile:"Non Q",fType:"Journal",fStatus:"Draft",fIndex:"Non-Scopus",fAuthor:"First Author",fProject:"Non-PhD"};
+  Object.entries(defaults).forEach(([id,value])=>document.getElementById(id).value=value);
+  document.getElementById("editModalBg").style.display="flex";
+}
+
+function openEdit(id){
+  if(!isAdmin)return toggleLogin();
+  const item=pubs.find(entry=>entry.id===id);
+  if(!item)return;
+  editingId=id;
+  document.getElementById("editModalTitle").textContent="Edit publication";
+  document.getElementById("deleteEntryBtn").hidden=false;
+  const values={fTitle:item.t,fJournal:item.j,fPublisher:item.publisher||"",fLink:item.link||"",fYear:item.y,fQuartile:item.q,fType:item.type,fStatus:item.s,fIndex:item.i,fAuthor:item.a,fProject:item.p};
+  Object.entries(values).forEach(([field,value])=>document.getElementById(field).value=value);
+  document.getElementById("editModalBg").style.display="flex";
+}
+
+function closeEditModal(){document.getElementById("editModalBg").style.display="none";}
+
+function saveEntry(){
+  if(!isAdmin)return;
+  const entry={
+    id:editingId||nextId++,t:document.getElementById("fTitle").value.trim(),j:document.getElementById("fJournal").value.trim(),
+    publisher:document.getElementById("fPublisher").value.trim(),link:document.getElementById("fLink").value.trim(),
+    y:Number(document.getElementById("fYear").value),q:document.getElementById("fQuartile").value,type:document.getElementById("fType").value,
+    s:document.getElementById("fStatus").value,i:document.getElementById("fIndex").value,a:document.getElementById("fAuthor").value,p:document.getElementById("fProject").value
+  };
+  if(!entry.t||!entry.j||!entry.y){alert("Title, journal, and year are required.");return;}
+  const index=pubs.findIndex(item=>item.id===editingId);
+  if(index>=0)pubs[index]=entry;else pubs.push(entry);
+  persistEditorData();
+  closeEditModal();
+  renderAllFilterOptions();
+  applyFilters();
+}
+
+function deleteEntry(){
+  if(!isAdmin||!editingId||!confirm("Delete this publication?"))return;
+  pubs=pubs.filter(item=>item.id!==editingId);
+  persistEditorData();
+  closeEditModal();
+  renderAllFilterOptions();
+  applyFilters();
+}
 
 function toggleDarkMode(){
   document.body.classList.toggle('dark-mode');
@@ -515,6 +664,7 @@ function openDetailPanel(id){
     </div>
     <div class="detail-actions">
       ${item.link ? `<a class="detail-link" href="${formatPublicationUrl(item.link)}" target="_blank" rel="noopener">Open publication</a>` : ''}
+      ${isAdmin ? `<button class="detail-close" onclick="closeDetailPanel();openEdit(${item.id})">Edit publication</button>` : ''}
     </div>
   `;
   document.getElementById('detailPanel').style.display = 'flex';
@@ -686,6 +836,11 @@ async function loadPublicationData(){
     nextId = Math.max(...pubs.map(d => d.id), 0) + 1;
   }
 
+  try{
+    const saved=JSON.parse(localStorage.getItem(EDITOR_DATA_KEY)||"null");
+    if(Array.isArray(saved)&&saved.length)pubs=saved;
+  }catch(err){console.warn("Saved editor data could not be loaded.",err);}
+  nextId=Math.max(...pubs.map(item=>Number(item.id)||0),0)+1;
   filtered = [...pubs];
 }
 
@@ -741,6 +896,7 @@ function renderTable(){
   document.getElementById("nextBtn").disabled=page>=pages;
   document.getElementById("tableBody").innerHTML=slice.map((d,i)=>{
     const publicationUrl=formatPublicationUrl(getPublicationUrl(d));
+    const actionCell=isAdmin?`<td style="white-space:nowrap"><button class="act-btn" onclick="openEdit(${d.id})" title="Edit"><i class="ti ti-edit"></i></button><button class="act-btn del" onclick="editingId=${d.id};deleteEntry()" title="Delete"><i class="ti ti-trash"></i></button></td>`:"";
     return `
     <tr>
       <td style="color:var(--color-text-tertiary);font-size:13px">${start+i+1}</td>
@@ -752,8 +908,9 @@ function renderTable(){
       <td><span class="badge ${d.i==="Scopus"?"b-scopus":"b-nonscopus"}">${d.i}</span></td>
       <td><span class="badge ${d.a==="First Author"?"b-first":"b-co"}">${d.a==="First Author"?"1st":"Co"}</span></td>
       <td><span class="badge ${d.p==="PhD"?"b-phd":"b-co"}">${d.p}</span></td>
+      ${actionCell}
     </tr>`;
-  }).join("") || '<tr><td colspan="9" class="empty-state"><strong>No publications found</strong>Try another keyword or reset the filters.</td></tr>';
+  }).join("") || `<tr><td colspan="${isAdmin?10:9}" class="empty-state"><strong>No publications found</strong>Try another keyword or reset the filters.</td></tr>`;
 }
 
 function changePage(dir){page+=dir;renderTable();}
@@ -856,12 +1013,12 @@ function updateCharts(data){
 
 async function initDashboard(){
   applyDarkModeFromStorage();
-  localStorage.removeItem("publication-dashboard-auth");
   await loadPublicationData();
+  isAdmin=sessionStorage.getItem(EDITOR_SESSION_KEY)==="active";
   renderAllFilterOptions();
   buildCharts();
   updateMetrics(pubs);
-  renderTable();
+  updateEditorState();
 }
 
 initDashboard();

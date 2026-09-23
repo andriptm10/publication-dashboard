@@ -1,4 +1,4 @@
-const CACHE_NAME = "publication-dashboard-viewer-v3";
+const CACHE_NAME = "publication-dashboard-editor-v4";
 const APP_SHELL = [
   "/",
   "/index.html",

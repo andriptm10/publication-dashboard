@@ -47,6 +47,12 @@ body.dark-mode th{background:var(--color-background-secondary)}
 .chart-card{min-width:0}
 .chart-card canvas{max-width:100%}
 
+.auth-modal{width:min(420px,95vw)}
+.login-demo label{font-size:13px;font-weight:650;color:var(--color-text-secondary)}
+.login-demo input{font-size:15px;padding:11px 12px}
+.form-error{min-height:20px;color:var(--color-danger);font-size:13px}
+[hidden]{display:none!important}
+
 /* Slightly larger type for everyday reading. */
 .header-eyebrow,.meta-pill,.summary-title,.summary-tag{font-size:12px}
 .header-actions button{font-size:13px}
