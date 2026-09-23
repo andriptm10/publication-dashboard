@@ -220,6 +220,30 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
   </div>
 </div>
 
+<section class="research-impact" aria-labelledby="researchImpactTitle">
+  <div class="impact-heading">
+    <div>
+      <div class="section-eyebrow">Research profiles</div>
+      <h2 id="researchImpactTitle">Citation impact</h2>
+    </div>
+    <span class="impact-updated" id="metricsUpdated">Loading latest metrics…</span>
+  </div>
+  <div class="impact-grid">
+    <a class="impact-card scopus-card" href="https://www.scopus.com/authid/detail.uri?authorId=57222618904" target="_blank" rel="noopener">
+      <div class="impact-card-top"><span class="impact-source">Scopus</span><span class="impact-arrow" aria-hidden="true">↗</span></div>
+      <div class="impact-number"><span id="scopusHIndex">11</span><small>h-index</small></div>
+      <div class="impact-id">Author ID · <strong>57222618904</strong></div>
+      <div class="impact-status" id="scopusMetricStatus">Latest verified value</div>
+    </a>
+    <a class="impact-card scholar-card" href="https://scholar.google.com/citations?user=825itBQAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+      <div class="impact-card-top"><span class="impact-source">Google Scholar</span><span class="impact-arrow" aria-hidden="true">↗</span></div>
+      <div class="impact-number"><span id="scholarHIndex">14</span><small>h-index</small></div>
+      <div class="impact-id">Profile ID · <strong>825itBQAAAAJ</strong></div>
+      <div class="impact-status" id="scholarMetricStatus">Latest verified value</div>
+    </a>
+  </div>
+</section>
+
 <div class="metrics" id="metrics"></div>
 
 <div class="charts-row">
@@ -282,7 +306,7 @@ body.presentation-mode .btn-present{background:linear-gradient(135deg,var(--colo
       <div class="multi-filter-menu" id="filterProject"></div>
     </div>
   </div>
-  <div style="overflow-x:auto">
+  <div class="table-scroll" style="overflow-x:auto">
     <table>
       <thead>
         <tr>
@@ -506,6 +530,24 @@ function updateEditorState(){
 
 function persistEditorData(){
   localStorage.setItem(EDITOR_DATA_KEY,JSON.stringify(pubs));
+}
+
+async function loadResearchMetrics(){
+  const updated=document.getElementById("metricsUpdated");
+  try{
+    const response=await fetch("/api/research-metrics",{headers:{Accept:"application/json"}});
+    if(!response.ok)throw new Error(`Metrics request failed: ${response.status}`);
+    const data=await response.json();
+    if(Number.isFinite(Number(data.scopus?.hIndex)))document.getElementById("scopusHIndex").textContent=data.scopus.hIndex;
+    if(Number.isFinite(Number(data.scholar?.hIndex)))document.getElementById("scholarHIndex").textContent=data.scholar.hIndex;
+    document.getElementById("scopusMetricStatus").textContent=data.scopus?.live?"Updated automatically":"Verified snapshot";
+    document.getElementById("scholarMetricStatus").textContent=data.scholar?.live?"Updated automatically":"Verified snapshot";
+    const date=data.updatedAt?new Date(data.updatedAt):null;
+    updated.textContent=date&&!Number.isNaN(date.valueOf())?`Updated ${date.toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})}`:"Metrics available";
+  }catch(err){
+    console.warn("Research metrics could not be refreshed.",err);
+    updated.textContent="Latest verified values";
+  }
 }
 
 function openAdd(){
@@ -896,18 +938,18 @@ function renderTable(){
   document.getElementById("nextBtn").disabled=page>=pages;
   document.getElementById("tableBody").innerHTML=slice.map((d,i)=>{
     const publicationUrl=formatPublicationUrl(getPublicationUrl(d));
-    const actionCell=isAdmin?`<td style="white-space:nowrap"><button class="act-btn" onclick="openEdit(${d.id})" title="Edit"><i class="ti ti-edit"></i></button><button class="act-btn del" onclick="editingId=${d.id};deleteEntry()" title="Delete"><i class="ti ti-trash"></i></button></td>`:"";
+    const actionCell=isAdmin?`<td data-label="Actions" class="mobile-actions"><button class="act-btn" onclick="openEdit(${d.id})" title="Edit"><i class="ti ti-edit"></i> <span>Edit</span></button><button class="act-btn del" onclick="editingId=${d.id};deleteEntry()" title="Delete"><i class="ti ti-trash"></i> <span>Delete</span></button></td>`:"";
     return `
     <tr>
-      <td style="color:var(--color-text-tertiary);font-size:13px">${start+i+1}</td>
-      <td><button type="button" class="title-link" title="View publication" onclick="openDetailPanel(${d.id})">${d.t}</button><br><span style="font-size:13px;color:var(--color-text-tertiary)">${d.j}</span>${publicationUrl?`<br><a class="pub-link" href="${publicationUrl}" target="_blank" rel="noopener">DOI / Link</a>`:""}</td>
-      <td style="white-space:nowrap">${d.y}</td>
-      <td><span class="badge ${quartileClass(d.q)}">${d.q}</span></td>
-      <td style="font-size:13px;color:var(--color-text-secondary);white-space:nowrap">${d.type}</td>
-      <td><span class="badge ${statusClass(d.s)}">${d.s}</span></td>
-      <td><span class="badge ${d.i==="Scopus"?"b-scopus":"b-nonscopus"}">${d.i}</span></td>
-      <td><span class="badge ${d.a==="First Author"?"b-first":"b-co"}">${d.a==="First Author"?"1st":"Co"}</span></td>
-      <td><span class="badge ${d.p==="PhD"?"b-phd":"b-co"}">${d.p}</span></td>
+      <td class="mobile-row-number">${start+i+1}</td>
+      <td class="mobile-title"><button type="button" class="title-link" title="View publication" onclick="openDetailPanel(${d.id})">${d.t}</button><br><span class="journal-name">${d.j}</span>${publicationUrl?`<br><a class="pub-link" href="${publicationUrl}" target="_blank" rel="noopener">DOI / Link</a>`:""}</td>
+      <td data-label="Year">${d.y}</td>
+      <td data-label="Quartile"><span class="badge ${quartileClass(d.q)}">${d.q}</span></td>
+      <td data-label="Type" class="publication-type">${d.type}</td>
+      <td data-label="Status"><span class="badge ${statusClass(d.s)}">${d.s}</span></td>
+      <td data-label="Index"><span class="badge ${d.i==="Scopus"?"b-scopus":"b-nonscopus"}">${d.i}</span></td>
+      <td data-label="Role"><span class="badge ${d.a==="First Author"?"b-first":"b-co"}">${d.a==="First Author"?"1st":"Co"}</span></td>
+      <td data-label="Project"><span class="badge ${d.p==="PhD"?"b-phd":"b-co"}">${d.p}</span></td>
       ${actionCell}
     </tr>`;
   }).join("") || `<tr><td colspan="${isAdmin?10:9}" class="empty-state"><strong>No publications found</strong>Try another keyword or reset the filters.</td></tr>`;
@@ -1019,6 +1061,7 @@ async function initDashboard(){
   buildCharts();
   updateMetrics(pubs);
   updateEditorState();
+  loadResearchMetrics();
 }
 
 initDashboard();

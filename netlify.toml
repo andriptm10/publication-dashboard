@@ -1,5 +1,11 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/research-metrics"
+  to = "/.netlify/functions/research-metrics"
+  status = 200
 
 [[headers]]
   for = "/*"

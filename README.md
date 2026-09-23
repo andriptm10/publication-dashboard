@@ -26,3 +26,14 @@ The public dashboard opens in viewer mode. An editor can log in to add, update, 
 Publication data is loaded from `data/publications.json`. Editor changes are saved in that browser's local storage, so they do not update the deployed dataset for other visitors. Update `data/publications.json` and push to GitHub for shared production data changes.
 
 Netlify settings: production branch `main`, no build command, publish directory `.`.
+
+## Research metrics
+
+The dashboard displays Scopus Author ID `57222618904` and Google Scholar ID `825itBQAAAAJ`. The Netlify function at `/api/research-metrics` refreshes both h-index values and caches results for six hours.
+
+Configure these Netlify environment variables for live updates:
+
+- `ELSEVIER_API_KEY` for the official Scopus Author Retrieval API.
+- `SERPAPI_KEY` for the Google Scholar Author API.
+
+If either key is unavailable or its provider cannot be reached, the dashboard displays the latest verified snapshot instead of leaving the metric empty.
